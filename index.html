@@ -1,0 +1,2493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DAZN Live Stream Dashboard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0a0a0a;color:#fff;min-height:100vh}
+
+/* ── HEADER ── */
+.header{background:linear-gradient(135deg,#f8ff00,#f0c800);padding:20px 30px;display:flex;align-items:center;justify-content:space-between}
+.header-left{display:flex;align-items:center;gap:15px}
+.dazn-logo{font-size:28px;font-weight:900;color:#000;letter-spacing:2px}
+.header-title{font-size:18px;font-weight:600;color:#000}
+.header-subtitle{font-size:12px;color:#333;margin-top:2px}
+.live-badge{background:#f00;color:#fff;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px;animation:pulse 1.5s infinite}
+.live-dot{width:8px;height:8px;background:#fff;border-radius:50%;animation:blink 1s infinite}
+
+/* ── ANIMATIONS ── */
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,0,0,0.4)}50%{box-shadow:0 0 0 8px rgba(255,0,0,0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── COUNTRY SELECTOR BAR ── */
+.country-bar{background:#141414;padding:14px 30px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;border-bottom:2px solid #f8ff00}
+.country-bar-label{font-size:13px;font-weight:600;color:#f8ff00;white-space:nowrap}
+.country-grid{display:flex;flex-wrap:wrap;gap:8px;flex:1}
+.country-btn{padding:7px 16px;border:1px solid #333;border-radius:20px;background:#1e1e1e;color:#ccc;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.country-btn:hover{background:#2e2e2e;border-color:#f8ff00;color:#f8ff00}
+.country-btn.active{background:#f8ff00;color:#000;border-color:#f8ff00;box-shadow:0 0 10px rgba(248,255,0,0.4)}
+.country-btn.all-btn{background:#222;border:2px solid #f8ff00;color:#f8ff00;font-weight:800;padding:7px 20px}
+.country-btn.all-btn.active{background:#f8ff00;color:#000}
+.selected-country-badge{display:flex;align-items:center;gap:6px;background:#1a1a00;border:1px solid #f8ff00;border-radius:8px;padding:6px 14px;font-size:13px;color:#f8ff00;font-weight:700;white-space:nowrap}
+
+/* ── CONTROLS ── */
+.controls{background:#1a1a1a;padding:15px 30px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid #333}
+.btn{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;transition:all 0.2s;display:flex;align-items:center;gap:6px}
+.btn-primary{background:#f8ff00;color:#000}
+.btn-primary:hover{background:#e0e600;transform:translateY(-1px);box-shadow:0 4px 15px rgba(248,255,0,0.4)}
+.btn-secondary{background:#2a2a2a;color:#fff;border:1px solid #444}
+.btn-secondary:hover{background:#3a3a3a;transform:translateY(-1px)}
+.btn-validate{background:#00aaff;color:#000}
+.btn-validate:hover{background:#0088cc;color:#fff;transform:translateY(-1px);box-shadow:0 4px 15px rgba(0,170,255,0.4)}
+.btn-back{background:#ff9944;color:#000}
+.btn-back:hover{background:#e07730;transform:translateY(-1px)}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none!important}
+.search-box{padding:10px 16px;background:#2a2a2a;border:1px solid #444;border-radius:8px;color:#fff;font-size:14px;width:240px;outline:none;transition:border-color 0.2s}
+.search-box:focus{border-color:#f8ff00}
+.search-box::placeholder{color:#888}
+.auto-refresh-label{display:flex;align-items:center;gap:8px;color:#aaa;font-size:13px;cursor:pointer}
+.auto-refresh-label input[type=checkbox]{accent-color:#f8ff00;width:16px;height:16px;cursor:pointer}
+.refresh-interval{padding:8px 12px;background:#2a2a2a;border:1px solid #444;border-radius:8px;color:#fff;font-size:13px;outline:none;cursor:pointer}
+.stats-bar{margin-left:auto;display:flex;gap:20px}
+.stat-item{text-align:center}
+.stat-value{font-size:20px;font-weight:700;color:#f8ff00}
+.stat-label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px}
+
+/* ── COLUMN SELECTOR DROPDOWN ── */
+.col-selector-container{position:relative;display:inline-block}
+.col-selector-btn{background:#2a2a2a;color:#f8ff00;border:1px solid #444;padding:10px 16px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all 0.2s}
+.col-selector-btn:hover{background:#3a3a3a;border-color:#f8ff00}
+.col-dropdown-menu{display:none;position:absolute;top:105%;left:0;background:#181818;border:1px solid #f8ff00;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.8);z-index:999;width:260px;max-height:380px;overflow-y:auto;padding:10px}
+.col-dropdown-menu.show{display:block}
+.col-dropdown-header{display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid #333;margin-bottom:8px;font-size:12px;font-weight:700;color:#f8ff00}
+.col-checkbox-item{display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:4px;cursor:pointer;font-size:12px;color:#ddd;transition:background 0.15s}
+.col-checkbox-item:hover{background:#252525}
+.col-checkbox-item input[type=checkbox]{accent-color:#f8ff00;cursor:pointer}
+
+/* ── DATE/TIME & MULTI-FILTER BAR ── */
+.filter-bar{background:#111;padding:12px 30px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;border-bottom:1px solid #2a2a2a}
+.filter-bar-label{font-size:12px;font-weight:700;color:#f8ff00;white-space:nowrap}
+.filter-group{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.filter-group-label{font-size:11px;color:#888;white-space:nowrap}
+.filter-input{padding:7px 10px;background:#1e1e1e;border:1px solid #333;border-radius:6px;color:#fff;font-size:12px;outline:none;transition:border-color 0.2s}
+.filter-input:focus{border-color:#f8ff00}
+.filter-input[type=date]::-webkit-calendar-picker-indicator{filter:invert(1);cursor:pointer}
+.filter-select{padding:7px 10px;background:#1e1e1e;border:1px solid #333;border-radius:6px;color:#f8ff00;font-size:12px;font-weight:700;outline:none;cursor:pointer}
+.filter-select:focus{border-color:#f8ff00}
+.btn-filter-apply{padding:8px 20px;background:#f8ff00;color:#000;border:none;border-radius:6px;font-size:12px;font-weight:800;cursor:pointer;transition:all 0.2s;box-shadow:0 2px 8px rgba(248,255,0,0.2)}
+.btn-filter-apply:hover{background:#e0e600;transform:translateY(-1px);box-shadow:0 4px 12px rgba(248,255,0,0.4)}
+.btn-filter-clear{padding:8px 14px;background:#2a2a2a;color:#aaa;border:1px solid #444;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s}
+.btn-filter-clear:hover{background:#3a3a3a;color:#fff}
+.filter-active-badge{background:#1a1500;border:1px solid #f8ff00;border-radius:6px;padding:4px 10px;font-size:11px;color:#f8ff00;font-weight:600}
+
+/* ── STREAM INDICATORS ── */
+.stream-indicators{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.indicator-pill{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid #333;background:#1a1a1a;white-space:nowrap;cursor:pointer;transition:all 0.2s;user-select:none}
+.indicator-pill:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.4)}
+.indicator-pill.active-filter{box-shadow:0 0 0 2px #fff}
+.indicator-pill .ind-count{font-size:14px;font-weight:900;margin-left:4px}
+.ind-invsrv{border-color:#4499ff;color:#4499ff;background:#001a3d}
+.ind-invsrv:hover{background:#002a5a}
+.ind-nowmk{border-color:#888;color:#888;background:#1a1a1a}
+.ind-nowmk:hover{background:#2a2a2a}
+.ind-dolby{border-color:#00cc66;color:#00cc66;background:#003d1a}
+.ind-dolby:hover{background:#005a26}
+.ind-hevc{border-color:#cc88ff;color:#cc88ff;background:#1a0033}
+.ind-hevc:hover{background:#2a0050}
+
+/* ── STATUS BAR ── */
+.status-bar{padding:10px 30px;background:#111;font-size:13px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #222}
+.status-indicator{width:10px;height:10px;border-radius:50%;background:#555;flex-shrink:0}
+.status-indicator.loading{background:#f8ff00;animation:blink 0.8s infinite}
+.status-indicator.success{background:#00cc66}
+.status-indicator.error{background:#ff4444}
+
+/* ── MAIN CONTENT ── */
+.main-content{padding:25px 30px}
+.loading-container{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;gap:20px}
+.spinner{width:50px;height:50px;border:4px solid #333;border-top:4px solid #f8ff00;border-radius:50%;animation:spin 0.8s linear infinite}
+.loading-text{color:#888;font-size:15px}
+.error-box{background:#1a0000;border:1px solid #ff4444;border-radius:12px;padding:25px}
+.error-box h3{color:#ff4444;margin-bottom:10px}
+.error-box p{color:#ffaaaa;font-size:14px;line-height:1.6}
+
+/* ── ALL REGIONS PROGRESS ── */
+.all-progress{background:#111;border:1px solid #2a2a2a;border-radius:12px;padding:20px;margin-bottom:20px}
+.all-progress h3{color:#f8ff00;margin-bottom:14px;font-size:14px}
+.progress-grid{display:flex;flex-wrap:wrap;gap:8px}
+.progress-pill{padding:5px 14px;border-radius:16px;font-size:12px;font-weight:600;border:1px solid #333;background:#1a1a1a;color:#888}
+.progress-pill.done{background:#003d1a;color:#00cc66;border-color:#00cc66}
+.progress-pill.loading{background:#1a1500;color:#f8ff00;border-color:#f8ff00;animation:blink 0.8s infinite}
+.progress-pill.error{background:#3d0000;color:#ff4444;border-color:#ff4444}
+
+/* ── REGION SECTION ── */
+.region-section{margin-bottom:30px;animation:fadeIn 0.3s ease}
+.region-header{background:#1a1a00;border:1px solid #f8ff00;border-radius:8px 8px 0 0;padding:10px 18px;display:flex;align-items:center;justify-content:space-between}
+.region-header h3{color:#f8ff00;font-size:14px;font-weight:700}
+.region-header span{color:#888;font-size:12px}
+
+/* ── TABLE ── */
+.table-wrapper{background:#111;border-radius:12px;overflow:hidden;border:1px solid #2a2a2a;box-shadow:0 8px 32px rgba(0,0,0,0.5);animation:fadeIn 0.3s ease}
+.table-header-bar{padding:15px 20px;background:#1a1a1a;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #2a2a2a;flex-wrap:wrap;gap:8px}
+.table-header-bar h3{font-size:15px;color:#f8ff00}
+.table-header-bar span{font-size:12px;color:#888}
+.country-tag{background:#1a1a00;border:1px solid #f8ff00;border-radius:6px;padding:3px 10px;font-size:12px;color:#f8ff00;font-weight:700}
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+thead tr{background:#1e1e1e}
+thead th{position:relative;padding:12px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#f8ff00;border-bottom:2px solid #f8ff00;white-space:nowrap;user-select:none;transition:background 0.2s}
+thead th:hover{background:#2a2a2a}
+.th-content{display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%;padding-right:8px}
+.th-label-group{display:inline-flex;align-items:center;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn-copy-col{background:rgba(255,255,255,0.08);border:1px solid #444;color:#aaa;border-radius:4px;padding:2px 5px;font-size:10px;cursor:pointer;transition:all 0.2s;flex-shrink:0;line-height:1}
+.btn-copy-col:hover{background:#f8ff00;color:#000;border-color:#f8ff00;transform:scale(1.1)}
+.col-resizer{position:absolute;top:0;right:0;width:6px;cursor:col-resize;user-select:none;height:100%;z-index:10}
+.col-resizer:hover, .col-resizer.resizing{background:#f8ff00}
+tbody tr{border-bottom:1px solid #1e1e1e;transition:background 0.15s}
+tbody tr:hover{background:#1c1c1c!important}
+tbody tr:nth-child(even){background:#0d0d0d}
+tbody td{padding:10px 14px;color:#ddd;vertical-align:middle;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ── BADGES & CELLS ── */
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:600}
+.badge-green{background:#003d1a;color:#00cc66;border:1px solid #00cc66}
+.badge-red{background:#3d0000;color:#ff4444;border:1px solid #ff4444}
+.badge-blue{background:#001a3d;color:#4499ff;border:1px solid #4499ff}
+.badge-yellow{background:#1a1500;color:#f8ff00;border:1px solid #f8ff00}
+.badge-purple{background:#1a0033;color:#cc88ff;border:1px solid #cc88ff}
+.badge-gray{background:#1a1a1a;color:#888;border:1px solid #444}
+.badge-orange{background:#2a1500;color:#ff9944;border:1px solid #ff9944}
+.stream-id{font-family:'Courier New',monospace;font-size:11px;color:#f8ff00;background:#1a1a00;padding:3px 8px;border-radius:4px;border:1px solid #3a3a00}
+.mono{font-family:'Courier New',monospace;font-size:11px;color:#aaa}
+.id-full{font-family:'Courier New',monospace;font-size:11px;color:#aaa;white-space:nowrap}
+.time-date{color:#fff;font-weight:600;font-size:11px}
+.time-time{color:#888;font-size:10px;margin-top:2px}
+.row-number{color:#555;font-size:11px;font-weight:600;text-align:center}
+.cell-desc{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#ccc;font-size:11px}
+.audio-cell{font-family:'Courier New',monospace;font-size:10px;color:#f8ff00;line-height:1.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dolby-cell{font-family:'Courier New',monospace;font-size:10px;color:#4499ff;line-height:1.6}
+.override-cell{font-family:'Courier New',monospace;font-size:11px;color:#cc88ff;background:#1a0033;padding:3px 8px;border-radius:4px;border:1px solid #440066}
+.mta-cell{font-family:'Courier New',monospace;font-size:10px;color:#ff9944}
+.tier-cell{font-family:'Courier New',monospace;font-size:11px;font-weight:800;color:#00aaff;background:#001a3d;padding:2px 8px;border-radius:4px;border:1px solid #0055aa;display:inline-block}
+
+/* ── PAGINATION ── */
+.pagination{display:flex;align-items:center;justify-content:center;gap:6px;padding:16px 20px;background:#1a1a1a;border-top:1px solid #2a2a2a;flex-wrap:wrap}
+.page-btn{padding:6px 12px;background:#2a2a2a;border:1px solid #444;border-radius:6px;color:#fff;cursor:pointer;font-size:13px;transition:all 0.2s}
+.page-btn:hover:not(:disabled){background:#f8ff00;color:#000;border-color:#f8ff00}
+.page-btn.active{background:#f8ff00;color:#000;border-color:#f8ff00;font-weight:700}
+.page-btn:disabled{opacity:0.3;cursor:not-allowed}
+.last-updated{margin-top:12px;text-align:right;font-size:12px;color:#555}
+
+/* ── EMPTY / WELCOME ── */
+.empty-state{text-align:center;padding:60px 20px;color:#444}
+.empty-state .icon{font-size:64px;margin-bottom:20px}
+.empty-state h3{font-size:18px;color:#666;margin-bottom:10px}
+.empty-state p{font-size:14px;color:#444;line-height:1.8}
+.welcome-countries{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:20px}
+.welcome-country-pill{padding:5px 14px;background:#1a1a1a;border:1px solid #333;border-radius:16px;font-size:12px;color:#888}
+
+/* ══════════════════════════════════════════
+   MK-EAE VALIDATION STYLES
+═══════════════════════════════════════════════ */
+.mismatch-alert{background:#3d0000;border:2px solid #ff4444;border-radius:10px;padding:14px 20px;margin-bottom:18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;animation:fadeIn 0.3s ease}
+.mismatch-alert .alert-icon{font-size:22px}
+.mismatch-alert .alert-title{color:#ff4444;font-weight:700;font-size:14px}
+.mismatch-alert .alert-sub{color:#ffaaaa;font-size:12px;margin-top:3px}
+.match-alert{background:#003d1a;border:2px solid #00cc66;border-radius:10px;padding:14px 20px;margin-bottom:18px;display:flex;align-items:center;gap:12px;animation:fadeIn 0.3s ease}
+.match-alert .alert-icon{font-size:22px}
+.match-alert .alert-title{color:#00cc66;font-weight:700;font-size:14px}
+.match-alert .alert-sub{color:#aaffcc;font-size:12px;margin-top:3px}
+
+.val-summary{background:#111;border:1px solid #2a2a2a;border-radius:10px;padding:14px 20px;margin-bottom:18px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;animation:fadeIn 0.3s ease}
+.val-stat{text-align:center;min-width:70px}
+.val-stat-value{font-size:22px;font-weight:900}
+.val-stat-label{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
+.val-total{color:#f8ff00}
+.val-match{color:#00cc66}
+.val-miss{color:#ff4444}
+.val-notfound{color:#ff9944}
+
+.val-header{background:linear-gradient(135deg,#001a3d,#003366);border:1px solid #00aaff;border-radius:10px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;animation:fadeIn 0.3s ease}
+.val-header-title{color:#00aaff;font-size:16px;font-weight:700}
+.val-header-sub{color:#aaccff;font-size:12px;margin-top:3px}
+
+.val-search-bar{background:#111;border:1px solid #2a2a2a;border-radius:8px;padding:10px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.val-search-box{padding:9px 14px;background:#1e1e1e;border:1px solid #333;border-radius:6px;color:#fff;font-size:13px;width:320px;outline:none;transition:border-color 0.2s}
+.val-search-box:focus{border-color:#00aaff}
+.val-search-box::placeholder{color:#555}
+.val-search-label{font-size:12px;color:#00aaff;font-weight:600;white-space:nowrap}
+.val-search-clear{padding:7px 14px;background:#2a2a2a;color:#aaa;border:1px solid #444;border-radius:6px;font-size:12px;cursor:pointer;transition:all 0.2s}
+.val-search-clear:hover{background:#3a3a3a;color:#fff}
+
+.val-filter-bar{background:#111;border:1px solid #2a2a2a;border-radius:8px;padding:10px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.val-filter-btn{padding:5px 14px;border-radius:16px;font-size:12px;font-weight:600;border:1px solid #444;background:#1a1a1a;color:#888;cursor:pointer;transition:all 0.2s}
+.val-filter-btn:hover{border-color:#f8ff00;color:#f8ff00}
+.val-filter-btn.active{background:#f8ff00;color:#000;border-color:#f8ff00}
+.val-filter-btn.f-match{border-color:#00cc66;color:#00cc66;background:#001a0d}
+.val-filter-btn.f-match.active{background:#00cc66;color:#000;border-color:#00cc66}
+.val-filter-btn.f-miss{border-color:#ff4444;color:#ff4444;background:#1a0000}
+.val-filter-btn.f-miss.active{background:#ff4444;color:#fff;border-color:#ff4444}
+.val-filter-btn.f-notfound{border-color:#ff9944;color:#ff9944;background:#1a0d00}
+.val-filter-btn.f-notfound.active{background:#ff9944;color:#000;border-color:#ff9944}
+
+/* DCH checkbox */
+.dch-toggle{display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0d1a2a;border:1px solid #00aaff;border-radius:8px;cursor:pointer;font-size:13px;color:#00aaff;font-weight:600;transition:all 0.2s;user-select:none}
+.dch-toggle:hover{background:#1a2a3d}
+.dch-toggle input[type=checkbox]{accent-color:#00aaff;width:15px;height:15px;cursor:pointer}
+.dch-badge{display:inline-block;background:#1a0033;color:#cc88ff;border:1px solid #cc88ff;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;margin-left:4px}
+.dcg-badge{display:inline-block;background:#001a3d;color:#00aaff;border:1px solid #00aaff;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;margin-left:4px}
+
+/* ── VALIDATION TABLE ── */
+.val-table{width:100%;border-collapse:collapse;font-size:12px;table-layout:auto}
+.val-table thead tr{background:#1e1e1e}
+.val-table thead th{padding:10px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#f8ff00;border-bottom:2px solid #f8ff00;white-space:nowrap}
+.val-table thead th.th-ar{color:#00aaff;border-bottom-color:#00aaff}
+.val-table thead th.th-dcg{color:#00aaff;border-bottom-color:#00aaff}
+.val-table thead th.th-dch{color:#cc88ff;border-bottom-color:#cc88ff}
+.val-table thead th.th-status{width:120px}
+.val-table thead th.th-region{width:90px}
+.val-table thead th.th-oid{width:120px}
+.val-table thead th.th-num{color:#555;border-bottom-color:#333;width:40px}
+.val-table tbody tr{border-bottom:1px solid #1e1e1e;transition:background 0.15s}
+.val-table tbody tr:hover td{filter:brightness(1.15)}
+.val-table tbody tr.vrow-match    td.td-fixed{background:#001a0d}
+.val-table tbody tr.vrow-miss     td.td-fixed{background:#1a0000}
+.val-table tbody tr.vrow-notfound td.td-fixed{background:#1a0d00}
+.val-table td{padding:8px 12px;vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:320px}
+.val-table td.td-fixed{background:#0d0d0d}
+
+/* AR cells */
+.val-table td.td-ar-match   {background:#003d1a;color:#00cc66;border-left:3px solid #00cc66;font-family:'Courier New',monospace;font-size:11px}
+.val-table td.td-ar-miss    {background:#3d0000;color:#ff4444;border-left:3px solid #ff4444;font-family:'Courier New',monospace;font-size:11px}
+.val-table td.td-ar-notfound{background:#1a0d00;color:#ff9944;border-left:3px solid #ff9944;font-family:'Courier New',monospace;font-size:11px}
+
+/* DCG cells */
+.val-table td.td-dcg-match   {background:#002a12;color:#00cc66;font-family:'Courier New',monospace;font-size:11px}
+.val-table td.td-dcg-miss    {background:#2a0000;color:#ff4444;font-family:'Courier New',monospace;font-size:11px}
+.val-table td.td-dcg-notfound{background:#140a00;color:#ff9944;font-family:'Courier New',monospace;font-size:11px;font-style:italic}
+
+/* DCH cells */
+.val-table td.td-dch-match   {background:#1a0033;color:#00cc66;border-right:3px solid #00cc66;font-family:'Courier New',monospace;font-size:11px}
+.val-table td.td-dch-miss    {background:#2a0020;color:#ff4444;border-right:3px solid #ff4444;font-family:'Courier New',monospace;font-size:11px}
+.val-table td.td-dch-notfound{background:#140a00;color:#ff9944;border-right:3px solid #ff9944;font-family:'Courier New',monospace;font-size:11px;font-style:italic}
+
+/* status badges */
+.val-status-match   {background:#003d1a;color:#00cc66;border:1px solid #00cc66;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:700;white-space:nowrap}
+.val-status-miss    {background:#3d0000;color:#ff4444;border:1px solid #ff4444;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:700;white-space:nowrap}
+.val-status-notfound{background:#2a1500;color:#ff9944;border:1px solid #ff9944;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:700;white-space:nowrap}
+
+.src-ar {display:inline-block;background:#001a3d;color:#00aaff;border:1px solid #00aaff;padding:1px 7px;border-radius:8px;font-size:9px;font-weight:700}
+.src-dcg{display:inline-block;background:#001a3d;color:#00aaff;border:1px solid #00aaff;padding:1px 7px;border-radius:8px;font-size:9px;font-weight:700}
+.src-dch{display:inline-block;background:#1a0033;color:#cc88ff;border:1px solid #cc88ff;padding:1px 7px;border-radius:8px;font-size:9px;font-weight:700}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .header{flex-direction:column;gap:10px;text-align:center}
+  .controls{flex-direction:column;align-items:stretch}
+  .search-box{width:100%}
+  .stats-bar{margin-left:0;justify-content:center}
+  .main-content{padding:15px}
+  .country-bar{padding:12px 15px}
+  .stream-indicators{justify-content:center}
+  .filter-bar{padding:10px 15px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="header">
+  <div class="header-left">
+    <div class="dazn-logo">DAZN</div>
+    <div>
+      <div class="header-title">Live Stream Dashboard</div>
+      <div class="header-subtitle">Real-time stream monitoring &amp; management</div>
+    </div>
+  </div>
+  <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+</div>
+
+<!-- ═══ COUNTRY SELECTOR ═══ -->
+<div class="country-bar">
+  <div class="country-bar-label">🌍 Region:</div>
+  <div class="country-grid" id="countryGrid"></div>
+  <div class="selected-country-badge" id="selectedBadge" style="display:none">
+    <span>📡</span><span id="selectedBadgeText">—</span>
+  </div>
+</div>
+
+<!-- ═══ DATE, TIER, DRM & MTA FILTER BAR ═══ -->
+<div class="filter-bar" id="filterBar">
+  <div class="filter-bar-label">📅 Stream Start Date:</div>
+  
+  <div class="filter-group">
+    <span class="filter-group-label">Start Date:</span>
+    <input type="date" class="filter-input" id="fStartDate"/>
+  </div>
+  <div class="filter-group">
+    <span class="filter-group-label">End Date:</span>
+    <input type="date" class="filter-input" id="fEndDate"/>
+  </div>
+
+  <div class="filter-group">
+    <span class="filter-group-label" style="color:#f8ff00;font-weight:700">Tier:</span>
+    <select class="filter-select" id="tierSelect">
+      <option value="ALL">All</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+    </select>
+  </div>
+
+  <div class="filter-group">
+    <span class="filter-group-label" style="color:#f8ff00;font-weight:700">DRM:</span>
+    <select class="filter-select" id="drmSelect">
+      <option value="ALL">All</option>
+      <option value="true">True</option>
+      <option value="false">False</option>
+    </select>
+  </div>
+
+  <div class="filter-group">
+    <span class="filter-group-label" style="color:#f8ff00;font-weight:700">MTA:</span>
+    <select class="filter-select" id="mtaSelect">
+      <option value="ALL">All</option>
+      <option value="Y">Yes</option>
+      <option value="N">No</option>
+    </select>
+  </div>
+
+  <button class="btn-filter-apply" onclick="applyCombinedFilters()">Apply Filter</button>
+  <button class="btn-filter-clear"  onclick="clearCombinedFilters()">Clear</button>
+  <span id="filterActiveBadge" style="display:none" class="filter-active-badge">⚡ Filter Active</span>
+</div>
+
+<!-- ═══ CONTROLS ═══ -->
+<div class="controls">
+  <!-- Column Selector Dropdown -->
+  <div class="col-selector-container">
+    <button class="col-selector-btn" id="colToggleBtn" onclick="toggleColumnMenu()">
+      ⚙️ Select Columns (<span id="selectedColCount">22</span>) ▾
+    </button>
+    <div class="col-dropdown-menu" id="colDropdownMenu">
+      <div class="col-dropdown-header">
+        <span>Display Columns</span>
+        <label style="cursor:pointer;display:flex;align-items:center;gap:4px">
+          <input type="checkbox" id="selectAllColsCheckbox" onchange="toggleSelectAllColumns(this.checked)" checked/>
+          <span>Select All</span>
+        </label>
+      </div>
+      <div id="colCheckboxesList"></div>
+    </div>
+  </div>
+
+  <button class="btn btn-primary"   id="fetchBtn"    onclick="fetchData()"       disabled>&#x21BA; Fetch Data</button>
+  <button class="btn btn-secondary" id="exportBtn"   onclick="exportCSV()"       disabled>&#x2193; Export CSV</button>
+  <button class="btn btn-validate"  id="validateBtn" onclick="startValidation()" disabled style="display:none">&#x2714; MK-EAE Validation</button>
+  <button class="btn btn-back"      id="backBtn"     onclick="backToDashboard()" style="display:none">&#x2190; Back</button>
+
+  <label class="dch-toggle" id="dchToggle" style="display:none">
+    <input type="checkbox" id="dchEnabled" onchange="onDchToggle()"/>
+    Enable DCH Validation
+    <span class="dch-badge">DCH</span>
+  </label>
+
+  <input type="text" class="search-box" id="searchInput"
+         placeholder="Search OAID, MFL ID, Desc, Override ID, RSID..."
+         oninput="filterTable()"/>
+  <label class="auto-refresh-label">
+    <input type="checkbox" id="autoRefresh" onchange="toggleAutoRefresh()"/> Auto Refresh
+  </label>
+  <select class="refresh-interval" id="refreshInterval" onchange="updateRefreshInterval()">
+    <option value="10000">Every 10s</option>
+    <option value="30000" selected>Every 30s</option>
+    <option value="60000">Every 60s</option>
+    <option value="120000">Every 2m</option>
+  </select>
+  <div class="stats-bar">
+    <div class="stat-item"><div class="stat-value" id="totalCount">0</div><div class="stat-label">Total</div></div>
+    <div class="stat-item"><div class="stat-value" id="drmCount">0</div><div class="stat-label">DRM</div></div>
+    <div class="stat-item"><div class="stat-value" id="filteredCount">0</div><div class="stat-label">Shown</div></div>
+  </div>
+  <div class="stream-indicators" id="streamIndicators" style="display:none">
+    <div class="indicator-pill ind-invsrv" id="pill-invsrv" onclick="toggleIndicatorFilter('invsrv')" title="Click to filter">
+      🖥️ INVISIBLE_SERVER <span class="ind-count" id="indInvSrv">0</span>
+    </div>
+    <div class="indicator-pill ind-nowmk" id="pill-nowmk" onclick="toggleIndicatorFilter('nowmk')" title="Click to filter">
+      🚫 No_WATERMARKING <span class="ind-count" id="indNoWmk">0</span>
+    </div>
+    <div class="indicator-pill ind-dolby" id="pill-dolby" onclick="toggleIndicatorFilter('dolby')" title="Click to filter">
+      🔊 Dolby <span class="ind-count" id="indDolby">0</span>
+    </div>
+    <div class="indicator-pill ind-hevc" id="pill-hevc" onclick="toggleIndicatorFilter('hevc')" title="Click to filter">
+      📺 HEVC <span class="ind-count" id="indHevc">0</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ STATUS BAR ═══ -->
+<div class="status-bar">
+  <div class="status-indicator" id="statusIndicator"></div>
+  <span id="statusText">Select a region above, then click Fetch Data</span>
+</div>
+
+<!-- ═══ MAIN CONTENT ═══ -->
+<div class="main-content" id="mainContent">
+  <div class="empty-state">
+    <div class="icon">📡</div>
+    <h3>Select a Region to Get Started</h3>
+    <p>Choose a country/region from the bar above or click
+       <strong style="color:#f8ff00">All Regions</strong> to load all streams.</p>
+    <div class="welcome-countries" id="welcomeCountries"></div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   CONFIGURATION & CONSTANTS
+   Central region is strictly placed at the end
+═══════════════════════════════════════════════ */
+var API_BASE      = 'http://localhost:3000/api/streams';
+var API_ALL       = 'http://localhost:3000/api/streams/all';
+var API_MKEAE_DCG = 'http://localhost:3000/api/mkeae/dcg';
+var API_MKEAE_DCH = 'http://localhost:3000/api/mkeae/dch';
+
+var COUNTRIES = [
+  'Japan','DACH','Canada','US',
+  'Italy','Spain','Brazil','ROW',
+  'Belgium','France','Portugal','Taiwan',
+  'Central'
+];
+
+var ALL_AVAILABLE_COLUMNS = [
+  { id: 'streamStartTime', label: 'Stream Start',    defaultWidth: '160px' },
+  { id: 'streamEndTime',   label: 'Stream End',      defaultWidth: '160px' },
+  { id: 'prodTier',        label: 'Tier',            defaultWidth: '80px'  },
+  { id: 'drmRequired',     label: 'DRM',             defaultWidth: '80px'  },
+  { id: 'streamId',        label: 'Stream ID',       defaultWidth: '140px' },
+  { id: 'competitionId',   label: 'Competition ID',  defaultWidth: '150px' },
+  { id: 'rightsId',        label: 'Rights ID',       defaultWidth: '140px' },
+  { id: 'lastModTime',     label: 'Last Modified',   defaultWidth: '160px' },
+  { id: 'description',     label: 'Description',     defaultWidth: '280px' },
+  { id: 'overrideId',      label: 'Override ID',     defaultWidth: '130px' },
+  { id: 'oaId',            label: 'OA ID',           defaultWidth: '120px' },
+  { id: 'rsid',            label: 'RSID',            defaultWidth: '140px' },
+  { id: 'mflId',           label: 'MFL Id',          defaultWidth: '220px' },
+  { id: 'closedCaptions',  label: 'Closed Captions', defaultWidth: '140px' },
+  { id: 'ccConfig',        label: 'cc Config',       defaultWidth: '160px' },
+  { id: 'audioLangs',      label: 'AudioLangs',      defaultWidth: '150px' },
+  { id: 'audioConfig',     label: 'Audio Config',    defaultWidth: '220px' },
+  { id: 'heEventTypeName', label: 'HE Event Type',   defaultWidth: '140px' },
+  { id: 'watermarking',    label: 'Watermarking',    defaultWidth: '160px' },
+  { id: 'dolbyConfig',     label: 'Dolby Config',    defaultWidth: '160px' },
+  { id: 'heResilience',    label: 'HE Resilience',   defaultWidth: '110px' },
+  { id: 'mta',             label: 'MTA',             defaultWidth: '80px'  }
+];
+
+/* ═══════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════ */
+var allData               = [];
+var filteredData          = [];
+var allRegionsData        = {};
+var currentPage           = 1;
+var PAGE_SIZE             = 50;
+var refreshTimer          = null;
+var sortCol               = 'streamStartTime';
+var sortDir               = 'asc';
+var selectedCountry       = null;
+var isAllMode             = false;
+var isValidationMode      = false;
+var validationResults     = [];
+var valFilter             = 'all';
+var valSearchQuery        = '';
+var dchEnabled            = false;
+var activeIndicatorFilter = null;
+
+/* Selection order is preserved here */
+var selectedColumns       = ALL_AVAILABLE_COLUMNS.map(function(c) { return c.id; });
+var columnWidths          = {};
+
+/* Combined Filter State */
+var filterState = {
+  active    : false,
+  startDate : null,
+  endDate   : null,
+  tier      : 'ALL',
+  drm       : 'ALL',
+  mta       : 'ALL'
+};
+
+/* ═══════════════════════════════════════════════
+   SAFE STRING HELPER
+═══════════════════════════════════════════════ */
+function safeStr(v) {
+  if (v === null || v === undefined) return '—';
+  if (typeof v === 'boolean')        return v ? 'true' : 'false';
+  if (typeof v === 'number')         return String(v);
+  if (typeof v === 'string')         return v.trim() === '' ? '—' : v;
+  if (Array.isArray(v))              return v.length === 0 ? '—' : v.join(', ');
+  if (typeof v === 'object')         return JSON.stringify(v);
+  return String(v);
+}
+
+/* ═══════════════════════════════════════════════
+   EPOCH → ISO STRING
+═══════════════════════════════════════════════ */
+function epochToIso(val) {
+  if (!val || val === '—') return null;
+  var n = Number(val);
+  if (!isNaN(n) && n > 1000000000000) return new Date(n).toISOString();
+  if (!isNaN(n) && n > 1000000000)    return new Date(n * 1000).toISOString();
+  if (typeof val === 'string' && val.trim() !== '') return val.trim();
+  return null;
+}
+
+/* ═══════════════════════════════════════════════
+   BOOT UI
+═══════════════════════════════════════════════ */
+(function buildCountryUI() {
+  var grid    = document.getElementById('countryGrid');
+  var welcome = document.getElementById('welcomeCountries');
+
+  var allBtn       = document.createElement('button');
+  allBtn.className = 'country-btn all-btn';
+  allBtn.id        = 'cbtn-ALL';
+  allBtn.textContent = '🌐 All Regions';
+  allBtn.onclick   = function() { selectAllRegions(); };
+  grid.appendChild(allBtn);
+
+  COUNTRIES.forEach(function(c) {
+    var btn       = document.createElement('button');
+    btn.className = 'country-btn';
+    btn.id        = 'cbtn-' + c;
+    btn.textContent = c;
+    btn.onclick   = function() { selectCountry(c); };
+    grid.appendChild(btn);
+
+    var pill       = document.createElement('div');
+    pill.className = 'welcome-country-pill';
+    pill.textContent = c;
+    welcome.appendChild(pill);
+  });
+
+  buildColumnSelectorMenu();
+
+  /* Enter key triggers fetch/apply globally across dashboard controls */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      var activeEl = document.activeElement;
+      if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'SELECT')) {
+        if (!document.getElementById('fetchBtn').disabled) {
+          fetchData();
+        } else {
+          filterTable();
+        }
+      }
+    }
+  });
+})();
+
+/* ═══════════════════════════════════════════════
+   COLUMN SELECTOR UI & LOGIC
+   (Preserves chronological selection order)
+═══════════════════════════════════════════════ */
+function buildColumnSelectorMenu() {
+  var container = document.getElementById('colCheckboxesList');
+  container.innerHTML = '';
+
+  ALL_AVAILABLE_COLUMNS.forEach(function(col) {
+    var label = document.createElement('label');
+    label.className = 'col-checkbox-item';
+
+    var chk = document.createElement('input');
+    chk.type = 'checkbox';
+    chk.value = col.id;
+    chk.checked = selectedColumns.indexOf(col.id) !== -1;
+    chk.onchange = function() {
+      onSingleColumnToggle(col.id, chk.checked);
+    };
+
+    var span = document.createElement('span');
+    span.textContent = col.label;
+
+    label.appendChild(chk);
+    label.appendChild(span);
+    container.appendChild(label);
+  });
+  updateColCountBadge();
+}
+
+function toggleColumnMenu() {
+  var menu = document.getElementById('colDropdownMenu');
+  menu.classList.toggle('show');
+}
+
+document.addEventListener('click', function(e) {
+  var container = document.querySelector('.col-selector-container');
+  if (container && !container.contains(e.target)) {
+    var menu = document.getElementById('colDropdownMenu');
+    if (menu) menu.classList.remove('show');
+  }
+});
+
+function toggleSelectAllColumns(isChecked) {
+  if (isChecked) {
+    selectedColumns = ALL_AVAILABLE_COLUMNS.map(function(c) { return c.id; });
+  } else {
+    selectedColumns = [];
+  }
+  var chks = document.querySelectorAll('#colCheckboxesList input[type=checkbox]');
+  chks.forEach(function(c) { c.checked = isChecked; });
+  updateColCountBadge();
+  refreshCurrentTableView();
+}
+
+function onSingleColumnToggle(colId, isChecked) {
+  if (isChecked) {
+    if (selectedColumns.indexOf(colId) === -1) {
+      selectedColumns.push(colId);
+    }
+  } else {
+    selectedColumns = selectedColumns.filter(function(id) { return id !== colId; });
+  }
+  var selectAllChk = document.getElementById('selectAllColsCheckbox');
+  if (selectAllChk) {
+    selectAllChk.checked = (selectedColumns.length === ALL_AVAILABLE_COLUMNS.length);
+  }
+  updateColCountBadge();
+  refreshCurrentTableView();
+}
+
+function updateColCountBadge() {
+  var badge = document.getElementById('selectedColCount');
+  if (badge) badge.textContent = selectedColumns.length;
+}
+
+function refreshCurrentTableView() {
+  if (isValidationMode) return;
+  if (isAllMode) { renderAllRegions(); }
+  else if (allData.length) { renderTable(); }
+}
+
+function onDchToggle() {
+  dchEnabled = document.getElementById('dchEnabled').checked;
+}
+
+/* ═══════════════════════════════════════════════
+   FILTER HELPER (Evaluates record against active filters)
+═══════════════════════════════════════════════ */
+function evaluateRecordFilters(s, q) {
+  if (q) {
+    var hit =
+      safeStr(s.streamId).toLowerCase().indexOf(q)         !== -1 ||
+      safeStr(s.rightsId).toLowerCase().indexOf(q)         !== -1 ||
+      safeStr(s.competitionId).toLowerCase().indexOf(q)    !== -1 ||
+      safeStr(s.description).toLowerCase().indexOf(q)      !== -1 ||
+      safeStr(s.overrideId).toLowerCase().indexOf(q)       !== -1 ||
+      safeStr(s.oaId).toLowerCase().indexOf(q)             !== -1 ||
+      safeStr(s.rsid).toLowerCase().indexOf(q)             !== -1 ||
+      safeStr(s.mflId).toLowerCase().indexOf(q)            !== -1 ||
+      safeStr(s.closedCaptions).toLowerCase().indexOf(q)   !== -1 ||
+      safeStr(s.ccConfig).toLowerCase().indexOf(q)         !== -1 ||
+      safeStr(s.audioLangs).toLowerCase().indexOf(q)       !== -1 ||
+      safeStr(s.audioConfig).toLowerCase().indexOf(q)      !== -1 ||
+      safeStr(s.prodTier).toLowerCase().indexOf(q)         !== -1 ||
+      safeStr(s.drmRequired).toLowerCase().indexOf(q)      !== -1 ||
+      safeStr(s.heEventTypeName).toLowerCase().indexOf(q)  !== -1 ||
+      safeStr(s.watermarking).toLowerCase().indexOf(q)     !== -1 ||
+      safeStr(s.dolbyConfig).toLowerCase().indexOf(q)      !== -1 ||
+      safeStr(s.mta).toLowerCase().indexOf(q)              !== -1;
+    if (!hit) return false;
+  }
+
+  if (filterState.active) {
+    if (filterState.startDate || filterState.endDate) {
+      var sst = s.streamStartTime ? new Date(s.streamStartTime) : null;
+      if (!sst || isNaN(sst.getTime())) return false;
+      if (filterState.startDate && sst < filterState.startDate) return false;
+      if (filterState.endDate   && sst > filterState.endDate)   return false;
+    }
+    if (filterState.tier !== 'ALL' && safeStr(s.prodTier) !== filterState.tier) return false;
+    if (filterState.drm !== 'ALL') {
+      var sDrm = (s.drmRequired === true || String(s.drmRequired).toLowerCase() === 'true') ? 'true' : 'false';
+      if (sDrm !== filterState.drm) return false;
+    }
+    if (filterState.mta !== 'ALL' && safeStr(s.mta) !== filterState.mta) return false;
+  }
+
+  if (activeIndicatorFilter) {
+    var wmk  = safeStr(s.watermarking).toUpperCase();
+    var dc   = safeStr(s.dolbyConfig).toUpperCase();
+    var hetn = safeStr(s.heEventTypeName).toUpperCase();
+    var raw  = s._raw || {};
+    if (activeIndicatorFilter === 'invsrv') {
+      if (wmk.indexOf('INVISIBLE_SERVER') === -1 &&
+          hetn.indexOf('INVISIBLE_SERVER') === -1 &&
+          safeStr(raw.invisibleServer || '').toUpperCase() !== 'TRUE') return false;
+    }
+    if (activeIndicatorFilter === 'nowmk') {
+      if (wmk !== 'NO_WATERMARKING' && wmk !== 'NONE' && wmk !== '—') return false;
+    }
+    if (activeIndicatorFilter === 'dolby') {
+      if (dc === '—' || dc === 'NONE' || dc === '') return false;
+    }
+    if (activeIndicatorFilter === 'hevc') {
+      var isHevc =
+        hetn.indexOf('HEVC') !== -1 || dc.indexOf('HEVC') !== -1 ||
+        safeStr(raw.codec      || '').toUpperCase().indexOf('HEVC') !== -1 ||
+        safeStr(raw.videoCodec || '').toUpperCase().indexOf('HEVC') !== -1 ||
+        safeStr(raw.hevc       || '').toUpperCase() === 'TRUE';
+      if (!isHevc) return false;
+    }
+  }
+
+  return true;
+}
+
+/* ═══════════════════════════════════════════════
+   COMBINED FILTER HANDLER (Apply Filter button ONLY)
+═══════════════════════════════════════════════ */
+function applyCombinedFilters() {
+  var sd   = document.getElementById('fStartDate').value;
+  var ed   = document.getElementById('fEndDate').value;
+  var tier = document.getElementById('tierSelect').value;
+  var drm  = document.getElementById('drmSelect').value;
+  var mta  = document.getElementById('mtaSelect').value;
+
+  var isFilterActive = (sd || ed || tier !== 'ALL' || drm !== 'ALL' || mta !== 'ALL');
+
+  filterState = {
+    active    : isFilterActive,
+    startDate : sd ? new Date(sd + 'T00:00:00Z') : null,
+    endDate   : ed ? new Date(ed + 'T23:59:59Z') : null,
+    tier      : tier,
+    drm       : drm,
+    mta       : mta
+  };
+
+  document.getElementById('filterActiveBadge').style.display = isFilterActive ? 'inline-block' : 'none';
+  setStatus('success', isFilterActive ? 'Filters applied successfully' : 'No active filters');
+
+  if (isValidationMode) {
+    renderValidation();
+  } else if (isAllMode) {
+    renderAllRegions();
+  } else {
+    applyAllFilters();
+    renderTable();
+  }
+}
+
+function clearCombinedFilters() {
+  document.getElementById('fStartDate').value = '';
+  document.getElementById('fEndDate').value   = '';
+  document.getElementById('tierSelect').value = 'ALL';
+  document.getElementById('drmSelect').value  = 'ALL';
+  document.getElementById('mtaSelect').value  = 'ALL';
+
+  filterState = {
+    active    : false,
+    startDate : null,
+    endDate   : null,
+    tier      : 'ALL',
+    drm       : 'ALL',
+    mta       : 'ALL'
+  };
+
+  document.getElementById('filterActiveBadge').style.display = 'none';
+
+  if (isValidationMode) {
+    renderValidation();
+  } else if (isAllMode) {
+    renderAllRegions();
+  } else {
+    applyAllFilters();
+    renderTable();
+  }
+  setStatus('success','Filters cleared');
+}
+
+/* ═══════════════════════════════════════════════
+   INDICATOR FILTER
+═══════════════════════════════════════════════ */
+function toggleIndicatorFilter(type) {
+  activeIndicatorFilter = (activeIndicatorFilter === type) ? null : type;
+  updateAllPillStyles();
+  if (isAllMode) { renderAllRegions(); } else { applyAllFilters(); renderTable(); }
+}
+
+function updateAllPillStyles() {
+  ['invsrv','nowmk','dolby','hevc'].forEach(function(p) {
+    var el = document.getElementById('pill-' + p);
+    if (!el) return;
+    if (activeIndicatorFilter === p) el.classList.add('active-filter');
+    else                             el.classList.remove('active-filter');
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   APPLY ALL FILTERS (Single Region)
+═══════════════════════════════════════════════ */
+function applyAllFilters() {
+  var q = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+  filteredData = allData.filter(function(s) {
+    return evaluateRecordFilters(s, q);
+  });
+  currentPage = 1;
+  updateStats();
+}
+
+/* ═══════════════════════════════════════════════
+   SELECT COUNTRY / REGION
+═══════════════════════════════════════════════ */
+function selectCountry(country) {
+  isAllMode             = false;
+  isValidationMode      = false;
+  selectedCountry       = country;
+  activeIndicatorFilter = null;
+  updateAllPillStyles();
+
+  document.getElementById('cbtn-ALL').className = 'country-btn all-btn';
+  COUNTRIES.forEach(function(c) {
+    var b = document.getElementById('cbtn-' + c);
+    if (b) b.className = 'country-btn' + (c === country ? ' active' : '');
+  });
+
+  document.getElementById('selectedBadge').style.display    = 'flex';
+  document.getElementById('selectedBadgeText').textContent  = country;
+  document.getElementById('fetchBtn').disabled              = false;
+  document.getElementById('streamIndicators').style.display = 'none';
+  document.getElementById('validateBtn').style.display      = 'none';
+  document.getElementById('backBtn').style.display          = 'none';
+  document.getElementById('dchToggle').style.display        = 'none';
+
+  setStatus('','Region selected: ' + country + ' — Click Fetch Data to load streams');
+  allData = []; filteredData = []; currentPage = 1;
+  updateStats();
+  document.getElementById('exportBtn').disabled = true;
+  document.getElementById('mainContent').innerHTML =
+    '<div class="empty-state"><div class="icon">🌍</div>' +
+    '<h3>' + country + ' Region Selected</h3>' +
+    '<p>Click <strong style="color:#f8ff00">Fetch Data</strong> to load live streams.</p></div>';
+}
+
+function selectAllRegions() {
+  isAllMode             = true;
+  isValidationMode      = false;
+  selectedCountry       = 'ALL';
+  activeIndicatorFilter = null;
+  updateAllPillStyles();
+
+  document.getElementById('cbtn-ALL').className = 'country-btn all-btn active';
+  COUNTRIES.forEach(function(c) {
+    var b = document.getElementById('cbtn-' + c);
+    if (b) b.className = 'country-btn';
+  });
+
+  document.getElementById('selectedBadge').style.display    = 'flex';
+  document.getElementById('selectedBadgeText').textContent  = 'All Regions';
+  document.getElementById('fetchBtn').disabled              = false;
+  document.getElementById('streamIndicators').style.display = 'none';
+  document.getElementById('validateBtn').style.display      = 'none';
+  document.getElementById('backBtn').style.display          = 'none';
+  document.getElementById('dchToggle').style.display        = 'none';
+
+  setStatus('','All Regions selected — Click Fetch Data');
+  allData = []; filteredData = []; currentPage = 1;
+  updateStats();
+  document.getElementById('exportBtn').disabled = true;
+  document.getElementById('mainContent').innerHTML =
+    '<div class="empty-state"><div class="icon">🌐</div>' +
+    '<h3>All Regions Selected</h3>' +
+    '<p>Click <strong style="color:#f8ff00">Fetch Data</strong> to load all ' +
+    COUNTRIES.length + ' regions.</p></div>';
+}
+
+/* ═══════════════════════════════════════════════
+   FETCH DATA
+═══════════════════════════════════════════════ */
+async function fetchData() {
+  if (!selectedCountry) { setStatus('error','Please select a region first.'); return; }
+  if (isAllMode) { await fetchAllRegions(); } else { await fetchSingleCountry(); }
+}
+
+async function fetchSingleCountry() {
+  var btn = document.getElementById('fetchBtn');
+  btn.disabled = true; btn.textContent = 'Loading...';
+  showLoading(selectedCountry);
+  try {
+    setStatus('loading','Fetching streams for ' + selectedCountry + '...');
+    var ctrl = new AbortController();
+    var t    = setTimeout(function() { ctrl.abort(); }, 20000);
+    var res  = await fetch(API_BASE + '?country=' + encodeURIComponent(selectedCountry),
+      { method:'GET', headers:{'Accept':'application/json'}, signal:ctrl.signal });
+    clearTimeout(t);
+    if (!res.ok) { var eb = await res.text(); throw new Error('HTTP ' + res.status + (eb?': '+eb:'')); }
+    var raw     = await res.json();
+    var streams = parseStreams(raw);
+    if (!streams.length) throw new Error('No stream records found for ' + selectedCountry);
+    allData = streams;
+    applyAllFilters();
+    updateIndicators(allData);
+    renderTable();
+    document.getElementById('exportBtn').disabled        = false;
+    document.getElementById('validateBtn').style.display = 'none';
+    setStatus('success','[' + selectedCountry + '] Loaded ' + allData.length +
+      ' streams — ' + new Date().toLocaleTimeString());
+  } catch(e) {
+    showError(e); setStatus('error','Error: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.innerHTML = '&#x21BA; Fetch Data';
+  }
+}
+
+async function fetchAllRegions() {
+  var btn = document.getElementById('fetchBtn');
+  btn.disabled = true; btn.textContent = 'Loading All...';
+  setStatus('loading','Fetching all ' + COUNTRIES.length + ' regions...');
+  showAllProgress(COUNTRIES, {});
+  try {
+    var ctrl = new AbortController();
+    var t    = setTimeout(function() { ctrl.abort(); }, 60000);
+    var res  = await fetch(API_ALL,
+      { method:'GET', headers:{'Accept':'application/json'}, signal:ctrl.signal });
+    clearTimeout(t);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    var raw = await res.json();
+    allRegionsData = {}; allData = [];
+    COUNTRIES.forEach(function(c) {
+      var regionRaw = raw[c] && raw[c].data ? raw[c].data : [];
+      var streams   = parseStreams(regionRaw);
+      allRegionsData[c] = streams;
+      streams.forEach(function(s) { s._country = c; allData.push(s); });
+    });
+    applyAllFilters();
+    updateIndicators(allData);
+    renderAllRegions();
+    document.getElementById('exportBtn').disabled        = false;
+    document.getElementById('validateBtn').style.display = 'flex';
+    document.getElementById('validateBtn').disabled      = false;
+    document.getElementById('dchToggle').style.display   = 'flex';
+    setStatus('success','All Regions loaded — ' + allData.length +
+      ' streams — ' + new Date().toLocaleTimeString());
+  } catch(e) {
+    showError(e); setStatus('error','Error: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.innerHTML = '&#x21BA; Fetch Data';
+  }
+}
+
+function showAllProgress(countries, doneMap) {
+  var pills = countries.map(function(c) {
+    var cls = doneMap[c]==='done' ? 'progress-pill done' :
+              doneMap[c]==='error'? 'progress-pill error': 'progress-pill loading';
+    return '<div class="' + cls + '">' + c + '</div>';
+  }).join('');
+  document.getElementById('mainContent').innerHTML =
+    '<div class="all-progress"><h3>🌐 Fetching All Regions...</h3>' +
+    '<div class="progress-grid">' + pills + '</div></div>' +
+    '<div class="loading-container"><div class="spinner"></div>' +
+    '<div class="loading-text">Loading all regions simultaneously...</div></div>';
+}
+
+function parseStreams(raw) {
+  if (!raw) return [];
+  if (Array.isArray(raw)) return raw.map(normalise);
+  var wrappers = ['streams','data','results','items','records','livestreams'];
+  for (var w = 0; w < wrappers.length; w++) {
+    if (raw && Array.isArray(raw[wrappers[w]])) return raw[wrappers[w]].map(normalise);
+  }
+  if (raw && typeof raw === 'object') {
+    var keys = Object.keys(raw);
+    for (var i = 0; i < keys.length; i++) {
+      if (Array.isArray(raw[keys[i]]) && raw[keys[i]].length > 0)
+        return raw[keys[i]].map(normalise);
+    }
+  }
+  return [];
+}
+
+/* ═══════════════════════════════════════════════
+   NORMALISE — Regional Live Stream API
+═══════════════════════════════════════════════ */
+function normalise(s) {
+  if (!s || typeof s !== 'object') return {};
+
+  /* Override ID */
+  var oid = '—';
+  var rawOid = s.overrideId || s.oid;
+  if (Array.isArray(rawOid) && rawOid.length > 0) {
+    oid = rawOid.map(function(o) { return (o && o.id) ? o.id : safeStr(o); }).join(', ');
+  } else if (rawOid) { oid = safeStr(rawOid); }
+
+  /* AudioConfig: dynamic code | pid : 258 */
+  var ac = '—';
+  var rawAc = s.audioConfig || s.ac;
+  if (Array.isArray(rawAc) && rawAc.length > 0) {
+    var validConfigs = [];
+    rawAc.forEach(function(a) {
+      if (a && typeof a === 'object') {
+        var lang = a.code || a.lang || safeStr(a);
+        var pid  = a.pid ? 'pid : ' + a.pid : '';
+        if (lang && pid) validConfigs.push(lang + ' | ' + pid);
+        else if (lang)   validConfigs.push(lang);
+      } else if (a) {
+        validConfigs.push(safeStr(a));
+      }
+    });
+    if (validConfigs.length > 0) ac = validConfigs.join(' | ');
+  } else if (rawAc && rawAc !== '') { ac = safeStr(rawAc); }
+
+  /* AudioLangs: dynamic de-de | en-gb */
+  var al = '—';
+  var rawAl = s.audioLangs || s.al;
+  if (Array.isArray(rawAl) && rawAl.length > 0) {
+    var validLangs = rawAl.filter(function(x){ return x !== null && x !== undefined && String(x).trim() !== ''; });
+    if (validLangs.length > 0) al = validLangs.map(function(x){ return safeStr(x).trim(); }).join(' | ');
+  } else if (rawAl && rawAl !== '') { al = safeStr(rawAl); }
+
+  /* Closed Captions: closedCaptioning / cc */
+  var cc = 'None';
+  var rawCc = s.closedCaptioning !== undefined ? s.closedCaptioning : s.cc;
+  if (Array.isArray(rawCc)) {
+    var filteredCc = rawCc.filter(function(x) { return x !== null && x !== undefined && String(x).trim() !== ''; });
+    if (filteredCc.length > 0) {
+      cc = filteredCc.map(function(x){ return safeStr(x).trim(); }).join(', ');
+    } else {
+      cc = 'None';
+    }
+  } else if (rawCc && String(rawCc).trim() !== '') {
+    cc = safeStr(rawCc);
+  }
+
+  /* cc Config: ccConfig / ccc -> code | standard */
+  var cccStr = 'none';
+  var rawCcc = s.ccConfig !== undefined ? s.ccConfig : s.ccc;
+  if (Array.isArray(rawCcc) && rawCcc.length > 0) {
+    var validCcc = [];
+    rawCcc.forEach(function(c) {
+      if (c && typeof c === 'object') {
+        var code = c.code || '';
+        var std  = c.standard || '';
+        if (code && std) validCcc.push(code + ' | ' + std);
+        else if (code || std) validCcc.push(code || std);
+      } else if (c) {
+        validCcc.push(safeStr(c));
+      }
+    });
+    if (validCcc.length > 0) cccStr = validCcc.join(' | ');
+  } else if (rawCcc && typeof rawCcc === 'string' && rawCcc.trim() !== '') {
+    cccStr = safeStr(rawCcc);
+  }
+
+  /* rsid: regionalSupplierId / rsid */
+  var rsidStr = safeStr(s.regionalSupplierId !== undefined ? s.regionalSupplierId : s.rsid);
+
+  /* MFL ID: links section with id */
+  var mflId = '—';
+  if (Array.isArray(s.links)) {
+    for (var li = 0; li < s.links.length; li++) {
+      var link = s.links[li];
+      if (link && link.id && String(link.id).trim() !== '') {
+        mflId = String(link.id).trim();
+        break;
+      }
+    }
+  }
+
+  /* Dolby Config */
+  var dc = '—';
+  var rawDc = s.dolbyConfig || s.dc;
+  if (Array.isArray(rawDc) && rawDc.length > 0) {
+    dc = rawDc.map(function(d) {
+      if (d && typeof d === 'object') {
+        var parts = [];
+        if (d.code)      parts.push(d.code);
+        if (d.pid)       parts.push('PID: ' + d.pid);
+        if (d.audioType) parts.push(d.audioType);
+        return parts.length > 0 ? parts.join(' | ') : safeStr(d);
+      }
+      return safeStr(d);
+    }).join('\n');
+  } else if (rawDc) { dc = safeStr(rawDc); }
+
+  /* MTA */
+  var mta = '—';
+  var rawMta = s.mta;
+  if (typeof rawMta === 'boolean') {
+    mta = rawMta ? 'Y' : 'N';
+  } else if (typeof rawMta === 'string' && rawMta.trim() !== '') {
+    mta = (rawMta.trim().toUpperCase() === 'Y' || rawMta.trim().toUpperCase() === 'TRUE') ? 'Y' : 'N';
+  }
+
+  /* Watermarking */
+  var wmk = '—';
+  var rawWmk = s.watermarking || s.wmk;
+  if (Array.isArray(rawWmk) && rawWmk.length > 0) {
+    wmk = rawWmk.map(function(x) { return safeStr(x); }).join(', ');
+  } else if (rawWmk) { wmk = safeStr(rawWmk); }
+
+  /* Resilience */
+  var heR = '—';
+  var rawHeR = s.heResilience || s.heR;
+  if (rawHeR !== undefined && rawHeR !== null) { heR = safeStr(rawHeR); }
+
+  /* Tier: prodTier / ptr */
+  var pTier = safeStr(s.prodTier !== undefined ? s.prodTier : (s.ptr !== undefined ? s.ptr : '—'));
+
+  /* DRM: drmRequired / drm */
+  var isDrm = (s.drmRequired !== undefined ? s.drmRequired : (s.drm !== undefined ? s.drm : false));
+
+  var sstRaw = s.streamStartTime || s.sst || s.streamStart || null;
+  var setRaw = s.streamEndTime   || s.set || s.streamEnd   || null;
+  var lmtRaw = s.lastModTime     || s.lmt || null;
+
+  return {
+    streamStartTime : epochToIso(sstRaw),
+    streamEndTime   : epochToIso(setRaw),
+    prodTier        : pTier,
+    drmRequired     : isDrm,
+    streamId        : safeStr(s.streamId  || s.oaId || s.id || '—'),
+    competitionId   : safeStr(s.competitionId || s.cmId || '—'),
+    rightsId        : safeStr(s.rightsId  || s.rid  || '—'),
+    lastModTime     : epochToIso(lmtRaw),
+    description     : safeStr(s.description || s.desc || '—'),
+    overrideId      : oid,
+    oaId            : safeStr(s.oaId || '—'),
+    rsid            : rsidStr,
+    mflId           : mflId,
+    closedCaptions  : cc,
+    ccConfig        : cccStr,
+    audioLangs      : al,
+    audioConfig     : ac,
+    heEventTypeName : safeStr(s.heEventTypeName || s.heETN || '—'),
+    watermarking    : wmk,
+    dolbyConfig     : dc,
+    heResilience    : heR,
+    mta             : mta,
+    _country        : s._country || null,
+    _raw            : s
+  };
+}
+
+/* ═══════════════════════════════════════════════
+   NORMALISE MK-EAE EVENT
+═══════════════════════════════════════════════ */
+function normaliseMkEae(ev) {
+  if (!ev || typeof ev !== 'object') return null;
+
+  var oid = '—';
+  var rawOid = ev.overrideId;
+  if (Array.isArray(rawOid) && rawOid.length > 0) {
+    oid = rawOid.map(function(o) { return (o && o.id) ? String(o.id) : safeStr(o); }).join(', ');
+  } else if (rawOid) { oid = safeStr(rawOid); }
+
+  var ac = '—';
+  var rawAc = ev.audioConfig;
+  if (Array.isArray(rawAc) && rawAc.length > 0) {
+    var validConfigs = [];
+    rawAc.forEach(function(a) {
+      if (a && typeof a === 'object') {
+        var lang = a.code || a.lang || safeStr(a);
+        var pid  = a.pid ? 'pid : ' + a.pid : '';
+        if (lang && pid) validConfigs.push(lang + ' | ' + pid);
+        else if (lang)   validConfigs.push(lang);
+      } else if (a) {
+        validConfigs.push(safeStr(a));
+      }
+    });
+    if (validConfigs.length > 0) ac = validConfigs.join(' | ');
+  } else if (rawAc) { ac = safeStr(rawAc); }
+
+  var mta = 'N';
+  var cv = ev.configValues || (ev._raw && ev._raw.configValues) || {};
+  var activeAudioCount = 0;
+
+  for (var k = 1; k <= 8; k++) {
+    var labelKey = 'audio' + k + 'label';
+    var langKey  = 'audio' + k + 'lang';
+    var labelVal = cv[labelKey] ? String(cv[labelKey]).trim() : '';
+    var langVal  = cv[langKey]  ? String(cv[langKey]).trim()  : '';
+
+    if (labelVal && labelVal.toUpperCase() !== 'UNUSED' && labelVal !== '') {
+      activeAudioCount++;
+    } else if (!labelVal && langVal && langVal.toUpperCase() !== 'QAU' && langVal.toUpperCase() !== 'UNUSED') {
+      activeAudioCount++;
+    }
+  }
+
+  if (activeAudioCount > 1) {
+    mta = 'Y';
+  } else if (activeAudioCount === 1) {
+    mta = 'N';
+  } else if (ev.multigame !== undefined && ev.multigame !== null) {
+    mta = (ev.multigame === true || ev.multigame === 'true' || ev.multigame === 'Y') ? 'Y' : 'N';
+  }
+
+  /* Dolby enabled flag in EAE */
+  var dEnabled = false;
+  if (ev.dolbyEnabled !== undefined) {
+    dEnabled = (ev.dolbyEnabled === true || ev.dolbyEnabled === 'true');
+  } else if (cv.dolbyEnabled !== undefined) {
+    dEnabled = (cv.dolbyEnabled === true || cv.dolbyEnabled === 'true');
+  } else if (ev.dolbyConfig && Array.isArray(ev.dolbyConfig) && ev.dolbyConfig.length > 0) {
+    dEnabled = true;
+  }
+
+  var wmk = '—';
+  if (ev.watermarking) { wmk = safeStr(ev.watermarking); }
+
+  var heR = '—';
+  if (ev.heResilience !== undefined && ev.heResilience !== null) {
+    heR = safeStr(ev.heResilience);
+  }
+
+  return {
+    streamStartTime : ev.streamStartTime || null,
+    streamEndTime   : ev.streamEndTime   || null,
+    competitionId   : safeStr(ev.competitionId || '—'),
+    rightsId        : safeStr(ev.rightsId       || '—'),
+    description     : safeStr(ev.description || '—'),
+    overrideId      : oid,
+    oaId            : safeStr(ev.oaId || '—'),
+    heEventTypeName : safeStr(ev.heEventTypeName || '—'),
+    watermarking    : wmk,
+    dolbyEnabled    : dEnabled,
+    dolbyConfig     : dEnabled ? 'true (enabled)' : 'false (disabled)',
+    heResilience    : heR,
+    audioConfig     : ac,
+    mta             : mta,
+    _raw            : ev
+  };
+}
+
+/* ═══════════════════════════════════════════════
+   MK-EAE COMPARISON ENGINE
+   Primary Matching Keys: ★ Stream Start, ★ Description, ★ Override ID
+   Matching rule: All 3 must match before comparing remaining fields.
+═══════════════════════════════════════════════ */
+var COMPARE_FIELDS = [
+  { key: 'streamStartTime',  label: 'Stream Start'  },
+  { key: 'streamEndTime',    label: 'Stream End'    },
+  { key: 'competitionId',    label: 'Competition ID'},
+  { key: 'rightsId',         label: 'Rights ID'     },
+  { key: 'description',      label: 'Description'   },
+  { key: 'overrideId',       label: 'Override ID'   },
+  { key: 'oaId',             label: 'OA ID'         },
+  { key: 'heEventTypeName',  label: 'HE Event Type' },
+  { key: 'watermarking',     label: 'Watermarking'  },
+  { key: 'dolbyConfig',      label: 'Dolby Config'  },
+  { key: 'heResilience',     label: 'HE Resilience' },
+  { key: 'audioConfig',      label: 'Audio Config'  },
+  { key: 'mta',              label: 'MTA'           }
+];
+
+var PRIMARY_MATCH_KEYS = [
+  'streamStartTime',
+  'description',
+  'overrideId'
+];
+
+function normaliseWmkForCompare(wmk) {
+  if (!wmk || wmk === '—') return 'NO_WATERMARKING';
+  var w = wmk.trim().toUpperCase();
+  if (w === 'INVISIBLE_SERVER' || w === 'OTHERS' || w === 'OTHER') return 'INVISIBLE_SERVER';
+  if (w === 'NO_WATERMARKING'  || w === 'NONE'   || w === '')      return 'NO_WATERMARKING';
+  return w;
+}
+
+function normaliseMtaForCompare(mta) {
+  if (!mta || mta === '—') return '—';
+  var m = mta.trim().toUpperCase();
+  if (m === 'TRUE'  || m === 'YES' || m === 'Y') return 'Y';
+  if (m === 'FALSE' || m === 'NO'  || m === 'N') return 'N';
+  return m;
+}
+
+function normaliseDateForCompare(ts) {
+  if (!ts || ts === '—') return '—';
+  var n = Number(ts);
+  if (!isNaN(n) && n > 1000000000000) return new Date(n).toISOString().slice(0,10);
+  if (!isNaN(n) && n > 1000000000)    return new Date(n*1000).toISOString().slice(0,10);
+  var d = new Date(ts);
+  if (!isNaN(d.getTime())) return d.toISOString().slice(0,10);
+  return ts.trim().slice(0,10).toLowerCase();
+}
+
+function normaliseDescForCompare(d) {
+  if (!d || d === '—') return '';
+  return safeStr(d).trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
+function normaliseStrForCompare(v) {
+  if (!v || v === '—') return '—';
+  return safeStr(v).trim().toLowerCase();
+}
+
+function compareField(fieldKey, arVal, mkVal, arRecord, mkRecord) {
+  var a = safeStr(arVal);
+  var m = safeStr(mkVal);
+
+  switch (fieldKey) {
+    case 'streamStartTime':
+    case 'streamEndTime':
+      return { match: normaliseDateForCompare(a) === normaliseDateForCompare(m), arVal: a, mkVal: m };
+
+    case 'description':
+      return { match: normaliseDescForCompare(a) === normaliseDescForCompare(m), arVal: a, mkVal: m };
+
+    case 'watermarking':
+      return { match: normaliseWmkForCompare(a) === normaliseWmkForCompare(m), arVal: a, mkVal: m };
+
+    case 'mta':
+      return { match: normaliseMtaForCompare(a) === normaliseMtaForCompare(m), arVal: a, mkVal: m };
+
+    case 'dolbyConfig':
+      var rawLiveDc = arRecord ? (arRecord._raw ? (arRecord._raw.dolbyConfig || arRecord._raw.dc) : null) : null;
+      var liveHasDolby = false;
+      if (Array.isArray(rawLiveDc) && rawLiveDc.length > 0) {
+        liveHasDolby = true;
+      } else if (arRecord && arRecord.dolbyConfig && arRecord.dolbyConfig !== '—' && arRecord.dolbyConfig !== 'NONE' && arRecord.dolbyConfig !== '') {
+        liveHasDolby = true;
+      }
+
+      var eaeHasDolby = mkRecord ? (mkRecord.dolbyEnabled === true) : false;
+      var isDolbyMatch = (liveHasDolby === eaeHasDolby);
+
+      return {
+        match: isDolbyMatch,
+        arVal: liveHasDolby ? (a !== '—' ? a : 'Enabled') : 'Empty / Disabled',
+        mkVal: eaeHasDolby ? 'true (enabled)' : 'false (disabled)'
+      };
+
+    default:
+      return { match: normaliseStrForCompare(a) === normaliseStrForCompare(m), arVal: a, mkVal: m };
+  }
+}
+
+function isEligibleOverrideId(oid) {
+  if (!oid || oid === '—') return false;
+  return oid.split(',').map(function(x){return x.trim();})
+            .some(function(id){ return /^[124]/.test(id); });
+}
+
+function buildMkMap(events) {
+  var primaryMap = {};
+
+  events.forEach(function(ev) {
+    var norm = normaliseMkEae(ev);
+    if (!norm) return;
+    var oidKey = safeStr(norm.overrideId).trim();
+    if (!oidKey || oidKey === '—') return;
+
+    var sDateKey = normaliseDateForCompare(norm.streamStartTime);
+    var descKey  = normaliseDescForCompare(norm.description);
+
+    oidKey.split(',').forEach(function(oid) {
+      oid = oid.trim();
+      if (!oid) return;
+
+      var fullKey = sDateKey + '|' + descKey + '|' + oid;
+      primaryMap[fullKey] = norm;
+    });
+  });
+
+  return primaryMap;
+}
+
+function runComparison(eligible, primaryMap) {
+  return eligible.map(function(arRecord) {
+    var arOid    = safeStr(arRecord.overrideId).trim();
+    var sDateKey = normaliseDateForCompare(arRecord.streamStartTime);
+    var descKey  = normaliseDescForCompare(arRecord.description);
+    var mkRecord = null;
+
+    /* Check matching on all three primary keys strictly */
+    arOid.split(',').forEach(function(oid) {
+      if (mkRecord) return;
+      oid = oid.trim();
+      var key = sDateKey + '|' + descKey + '|' + oid;
+      if (primaryMap[key]) {
+        mkRecord = primaryMap[key];
+      }
+    });
+
+    if (!mkRecord) {
+      return {
+        arRecord : arRecord,
+        mkRecord : null,
+        status   : 'NOT_FOUND',
+        fields   : {},
+        allMatch : false
+      };
+    }
+
+    var fieldResults = {};
+    var allMatch     = true;
+
+    COMPARE_FIELDS.forEach(function(f) {
+      var result = compareField(f.key, arRecord[f.key], mkRecord[f.key], arRecord, mkRecord);
+      fieldResults[f.key] = result;
+      if (!result.match) allMatch = false;
+    });
+
+    return {
+      arRecord : arRecord,
+      mkRecord : mkRecord,
+      status   : allMatch ? 'MATCH' : 'MISMATCH',
+      fields   : fieldResults,
+      allMatch : allMatch
+    };
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   START VALIDATION
+═══════════════════════════════════════════════ */
+async function startValidation() {
+  if (!isAllMode || !allData.length) {
+    setStatus('error','Please load All Regions data first.');
+    return;
+  }
+
+  isValidationMode = true;
+  valSearchQuery   = '';
+  dchEnabled       = document.getElementById('dchEnabled').checked;
+
+  var vBtn = document.getElementById('validateBtn');
+  vBtn.disabled    = true;
+  vBtn.textContent = '⏳ Validating...';
+  document.getElementById('backBtn').style.display = 'flex';
+
+  var loadMsg = dchEnabled ? 'Fetching MK-EAE DCG + DCH...' : 'Fetching MK-EAE DCG...';
+  setStatus('loading', loadMsg);
+  document.getElementById('mainContent').innerHTML =
+    '<div class="loading-container"><div class="spinner"></div>' +
+    '<div class="loading-text">' + loadMsg + '</div></div>';
+
+  try {
+    var ctrl1  = new AbortController();
+    var t1     = setTimeout(function(){ ctrl1.abort(); }, 60000);
+    var resDcg = await fetch(API_MKEAE_DCG,
+      { method:'GET', headers:{'Accept':'application/json'}, signal:ctrl1.signal });
+    clearTimeout(t1);
+    if (!resDcg.ok) throw new Error('MK-EAE DCG returned HTTP ' + resDcg.status);
+    var payDcg    = await resDcg.json();
+    var dcgEvents = Array.isArray(payDcg.events) ? payDcg.events : (Array.isArray(payDcg) ? payDcg : []);
+
+    var dchEvents = [];
+    if (dchEnabled) {
+      var ctrl2  = new AbortController();
+      var t2     = setTimeout(function(){ ctrl2.abort(); }, 60000);
+      var resDch = await fetch(API_MKEAE_DCH,
+        { method:'GET', headers:{'Accept':'application/json'}, signal:ctrl2.signal });
+      clearTimeout(t2);
+      if (!resDch.ok) throw new Error('MK-EAE DCH returned HTTP ' + resDch.status);
+      var payDch = await resDch.json();
+      dchEvents  = Array.isArray(payDch.events) ? payDch.events : (Array.isArray(payDch) ? payDch : []);
+    }
+
+    var dcgMap = buildMkMap(dcgEvents);
+    var dchMap = dchEnabled ? buildMkMap(dchEvents) : null;
+
+    var eligible = allData.filter(function(s) {
+      return isEligibleOverrideId(safeStr(s.overrideId));
+    });
+
+    var dcgResults = runComparison(eligible, dcgMap);
+    var dchResults = dchEnabled ? runComparison(eligible, dchMap) : null;
+
+    validationResults = eligible.map(function(arRecord, idx) {
+      var dcg = dcgResults[idx];
+      var dch = dchEnabled ? dchResults[idx] : null;
+
+      var overallStatus = dcg.status;
+      if (dch) {
+        var statuses = [dcg.status, dch.status];
+        if (statuses.indexOf('MISMATCH') !== -1) overallStatus = 'MISMATCH';
+        else if (statuses.indexOf('NOT_FOUND') !== -1) overallStatus = 'NOT_FOUND';
+        else overallStatus = 'MATCH';
+      }
+
+      return {
+        arRecord   : arRecord,
+        dcgResult  : dcg,
+        dchResult  : dch,
+        status     : overallStatus,
+        dchEnabled : dchEnabled
+      };
+    });
+
+    valFilter = 'all';
+    renderValidation();
+
+    var matchCount  = validationResults.filter(function(r){ return r.status==='MATCH'; }).length;
+    var missCount   = validationResults.filter(function(r){ return r.status==='MISMATCH'; }).length;
+    var notFndCount = validationResults.filter(function(r){ return r.status==='NOT_FOUND'; }).length;
+
+    setStatus(
+      (missCount > 0) ? 'error' : 'success',
+      'Validation complete — ' + validationResults.length + ' checked | ' +
+      matchCount + ' matched | ' + missCount + ' mismatched | ' +
+      notFndCount + ' not found' +
+      (dchEnabled ? ' [DCG+DCH]' : ' [DCG]')
+    );
+
+  } catch(e) {
+    showError(e);
+    setStatus('error','Validation error: ' + e.message);
+    isValidationMode = false;
+    document.getElementById('backBtn').style.display = 'none';
+  } finally {
+    vBtn.disabled  = false;
+    vBtn.innerHTML = '&#x2714; MK-EAE Validation';
+  }
+}
+
+function backToDashboard() {
+  isValidationMode = false;
+  valFilter        = 'all';
+  valSearchQuery   = '';
+  document.getElementById('backBtn').style.display = 'none';
+  renderAllRegions();
+  setStatus('success','Back to All Regions dashboard');
+}
+
+function setValFilter(f) {
+  valFilter = f;
+  renderValidation();
+}
+
+function valSearch() {
+  valSearchQuery = (document.getElementById('valSearchInput').value || '').trim().toLowerCase();
+  renderValidation();
+}
+
+function clearValSearch() {
+  valSearchQuery = '';
+  var el = document.getElementById('valSearchInput');
+  if (el) el.value = '';
+  renderValidation();
+}
+
+/* ═══════════════════════════════════════════════
+   RENDER VALIDATION RESULTS
+═══════════════════════════════════════════════ */
+function renderValidation() {
+  var container = document.getElementById('mainContent');
+
+  var matchCount  = validationResults.filter(function(r){ return r.status==='MATCH'; }).length;
+  var missCount   = validationResults.filter(function(r){ return r.status==='MISMATCH'; }).length;
+  var notFndCount = validationResults.filter(function(r){ return r.status==='NOT_FOUND'; }).length;
+  var totalCount  = validationResults.length;
+  var hasDch      = dchEnabled;
+
+  var displayed = validationResults.filter(function(r) {
+    if (valFilter === 'match')    return r.status === 'MATCH';
+    if (valFilter === 'mismatch') return r.status === 'MISMATCH';
+    if (valFilter === 'notfound') return r.status === 'NOT_FOUND';
+    return true;
+  });
+
+  if (filterState.active && (filterState.startDate || filterState.endDate)) {
+    displayed = displayed.filter(function(r) {
+      var sst = r.arRecord.streamStartTime ? new Date(r.arRecord.streamStartTime) : null;
+      if (!sst || isNaN(sst.getTime())) return false;
+      if (filterState.startDate && sst < filterState.startDate) return false;
+      if (filterState.endDate   && sst > filterState.endDate)   return false;
+      return true;
+    });
+  }
+
+  if (valSearchQuery) {
+    var q = valSearchQuery;
+    displayed = displayed.filter(function(r) {
+      return (
+        safeStr(r.arRecord.overrideId).toLowerCase().indexOf(q)      !== -1 ||
+        safeStr(r.arRecord.oaId).toLowerCase().indexOf(q)            !== -1 ||
+        safeStr(r.arRecord.rsid).toLowerCase().indexOf(q)            !== -1 ||
+        safeStr(r.arRecord.description).toLowerCase().indexOf(q)     !== -1 ||
+        safeStr(r.arRecord.competitionId).toLowerCase().indexOf(q)   !== -1 ||
+        safeStr(r.arRecord.rightsId).toLowerCase().indexOf(q)        !== -1 ||
+        safeStr(r.arRecord.closedCaptions).toLowerCase().indexOf(q)  !== -1 ||
+        safeStr(r.arRecord.ccConfig).toLowerCase().indexOf(q)        !== -1 ||
+        safeStr(r.arRecord.mflId).toLowerCase().indexOf(q)           !== -1 ||
+        safeStr(r.arRecord.audioLangs).toLowerCase().indexOf(q)      !== -1 ||
+        safeStr(r.arRecord.watermarking).toLowerCase().indexOf(q)    !== -1 ||
+        safeStr(r.arRecord.audioConfig).toLowerCase().indexOf(q)     !== -1 ||
+        safeStr(r.arRecord.dolbyConfig).toLowerCase().indexOf(q)     !== -1 ||
+        safeStr(r.arRecord.heEventTypeName).toLowerCase().indexOf(q) !== -1 ||
+        safeStr(r.arRecord._country).toLowerCase().indexOf(q)        !== -1
+      );
+    });
+  }
+
+  var alertHtml = '';
+  if (missCount > 0) {
+    alertHtml =
+      '<div class="mismatch-alert">' +
+      '<div class="alert-icon">⚠️</div>' +
+      '<div><div class="alert-title">Validation Issues Detected — ' +
+      missCount + ' mismatch(es) found</div>' +
+      '<div class="alert-sub">Red highlights signify parameter differences between Live API &amp; MK-EAE. Hover over any value to see full text.</div>' +
+      '</div></div>';
+  } else if (totalCount > 0 && notFndCount === 0) {
+    alertHtml =
+      '<div class="match-alert">' +
+      '<div class="alert-icon">✅</div>' +
+      '<div><div class="alert-title">All Records Match — ' + matchCount + ' record(s) fully validated</div>' +
+      '<div class="alert-sub">All eligible Override IDs match' + (hasDch ? ' across DCG + DCH' : ' in DCG') + '</div>' +
+      '</div></div>';
+  }
+
+  var summaryHtml =
+    '<div class="val-summary">' +
+    '<div class="val-stat"><div class="val-stat-value val-total">'    + totalCount  + '</div><div class="val-stat-label">Checked</div></div>' +
+    '<div class="val-stat"><div class="val-stat-value val-match">'    + matchCount  + '</div><div class="val-stat-label">Matched</div></div>' +
+    '<div class="val-stat"><div class="val-stat-value val-miss">'     + missCount   + '</div><div class="val-stat-label">Mismatched</div></div>' +
+    '<div class="val-stat"><div class="val-stat-value val-notfound">' + notFndCount + '</div><div class="val-stat-label">Not Found</div></div>' +
+    '</div>';
+
+  var headerHtml =
+    '<div class="val-header">' +
+    '<div><div class="val-header-title">🔍 MK-EAE Validation Results</div>' +
+    '<div class="val-header-sub">Primary matching keys: <span style="color:#f8ff00">★ Stream Start + ★ Description + ★ Override ID</span>' +
+    (hasDch ? ' &nbsp;|&nbsp; <span class="dcg-badge">DCG</span> <span class="dch-badge">DCH</span>' :
+              ' &nbsp;|&nbsp; <span class="dcg-badge">DCG</span>') +
+    '</div></div>' +
+    '<div style="font-size:12px;color:#aaccff">Updated: ' + new Date().toLocaleTimeString() + '</div>' +
+    '</div>';
+
+  var searchBarHtml =
+    '<div class="val-search-bar">' +
+    '<span class="val-search-label">🔎 Search Results:</span>' +
+    '<input type="text" class="val-search-box" id="valSearchInput"' +
+    ' placeholder="Search Override ID, OA ID, RSID, Description, MFL ID, Audio..."' +
+    ' value="' + valSearchQuery + '"' +
+    ' oninput="valSearch()"/>' +
+    (valSearchQuery ? '<button class="val-search-clear" onclick="clearValSearch()">✕ Clear</button>' : '') +
+    (valSearchQuery ? '<span style="font-size:11px;color:#888">Showing ' + displayed.length + ' results</span>' : '') +
+    '</div>';
+
+  var filterHtml =
+    '<div class="val-filter-bar">' +
+    '<span style="color:#888;font-size:12px;font-weight:600">Filter:</span>' +
+    '<button class="val-filter-btn'            + (valFilter==='all'     ? ' active':'') + '" onclick="setValFilter(\'all\')">All (' + totalCount + ')</button>' +
+    '<button class="val-filter-btn f-match'    + (valFilter==='match'   ? ' active':'') + '" onclick="setValFilter(\'match\')">✅ Matched (' + matchCount + ')</button>' +
+    '<button class="val-filter-btn f-miss'     + (valFilter==='mismatch'? ' active':'') + '" onclick="setValFilter(\'mismatch\')">❌ Mismatched (' + missCount + ')</button>' +
+    '<button class="val-filter-btn f-notfound' + (valFilter==='notfound'? ' active':'') + '" onclick="setValFilter(\'notfound\')">⚠️ Not Found (' + notFndCount + ')</button>' +
+    '</div>';
+
+  var tableHtml = '';
+  if (displayed.length === 0) {
+    tableHtml = '<div class="empty-state"><div class="icon">🔍</div>' +
+      '<h3>No records match</h3>' +
+      '<p>' + (valSearchQuery ? 'No validation results match your search.' : 'No records match this filter.') + '</p>' +
+      '</div>';
+  } else {
+    var colSpan   = hasDch ? 7 : 6;
+    var theadHtml =
+      '<thead><tr>' +
+      '<th class="th-num" style="cursor:default;width:40px">#</th>' +
+      '<th class="th-region" style="cursor:default;width:90px">Region</th>' +
+      '<th class="th-status" style="cursor:default;width:130px">Status</th>' +
+      '<th class="th-oid" style="cursor:default;width:130px">Override ID</th>' +
+      '<th style="cursor:default;width:140px;color:#aaa">Field</th>' +
+      '<th class="th-ar"  style="cursor:default;min-width:240px"><span class="src-ar">ALL REGIONS</span></th>' +
+      '<th class="th-dcg" style="cursor:default;min-width:240px"><span class="src-dcg">MK-EAE DCG</span></th>' +
+      (hasDch ? '<th class="th-dch" style="cursor:default;min-width:240px"><span class="src-dch">MK-EAE DCH</span></th>' : '') +
+      '</tr></thead>';
+
+    var tbodyHtml = '';
+
+    displayed.forEach(function(r, idx) {
+      var rowClass =
+        r.status === 'MATCH'    ? 'vrow-match'    :
+        r.status === 'MISMATCH' ? 'vrow-miss'     :
+                                  'vrow-notfound';
+
+      var statusBadge =
+        r.status === 'MATCH'    ? '<span class="val-status-match" title="All parameters match">✅ MATCH</span>' :
+        r.status === 'MISMATCH' ? '<span class="val-status-miss" title="One or more fields differ">❌ MISMATCH</span>' :
+                                  '<span class="val-status-notfound" title="Record not found in MK-EAE">⚠️ NOT FOUND</span>';
+
+      var oidDisplay    = safeStr(r.arRecord.overrideId);
+      var regionDisplay = '<span class="country-tag" style="font-size:10px">' + safeStr(r.arRecord._country) + '</span>';
+
+      var dcg = r.dcgResult;
+      var dch = r.dchResult;
+
+      COMPARE_FIELDS.forEach(function(f, fi) {
+        var isFirst = (fi === 0);
+        var arVal   = safeStr(r.arRecord[f.key]);
+
+        var dcgCellClass, dcgCellVal;
+        if (!dcg || dcg.status === 'NOT_FOUND') {
+          dcgCellClass = 'td-dcg-notfound';
+          dcgCellVal   = 'Not found in DCG';
+        } else if (dcg.fields && dcg.fields[f.key]) {
+          var dcgFr    = dcg.fields[f.key];
+          dcgCellClass = dcgFr.match ? 'td-dcg-match' : 'td-dcg-miss';
+          dcgCellVal   = safeStr(dcgFr.mkVal);
+        } else {
+          dcgCellClass = 'td-dcg-notfound';
+          dcgCellVal   = '—';
+        }
+
+        var dchCell = '';
+        if (hasDch) {
+          var dchCellClass, dchCellVal;
+          if (!dch || dch.status === 'NOT_FOUND') {
+            dchCellClass = 'td-dch-notfound';
+            dchCellVal   = 'Not found in DCH';
+          } else if (dch.fields && dch.fields[f.key]) {
+            var dchFr    = dch.fields[f.key];
+            dchCellClass = dchFr.match ? 'td-dch-match' : 'td-dch-miss';
+            dchCellVal   = safeStr(dchFr.mkVal);
+          } else {
+            dchCellClass = 'td-dch-notfound';
+            dchCellVal   = '—';
+          }
+          dchCell = '<td class="' + dchCellClass + '" title="' + dchCellVal + '">' + trunc(dchCellVal, 60) + '</td>';
+        }
+
+        var arCellClass;
+        if (r.status === 'NOT_FOUND') {
+          arCellClass = 'td-ar-notfound';
+        } else {
+          var dcgMiss = dcg && dcg.fields && dcg.fields[f.key] && !dcg.fields[f.key].match;
+          var dchMiss = hasDch && dch && dch.fields && dch.fields[f.key] && !dch.fields[f.key].match;
+          arCellClass = (dcgMiss || dchMiss) ? 'td-ar-miss' : 'td-ar-match';
+        }
+
+        var isPrimary = PRIMARY_MATCH_KEYS.indexOf(f.key) !== -1;
+        var fieldLabel = isPrimary ? ('<span style="color:#f8ff00">★</span> ' + f.label) : f.label;
+
+        if (isFirst) {
+          tbodyHtml +=
+            '<tr class="' + rowClass + '">' +
+            '<td class="td-fixed row-number" rowspan="' + COMPARE_FIELDS.length + '">' + (idx+1) + '</td>' +
+            '<td class="td-fixed" rowspan="' + COMPARE_FIELDS.length + '">' + regionDisplay + '</td>' +
+            '<td class="td-fixed" rowspan="' + COMPARE_FIELDS.length + '">' + statusBadge + '</td>' +
+            '<td class="td-fixed" rowspan="' + COMPARE_FIELDS.length + '" title="' + oidDisplay + '"><span class="override-cell">' + oidDisplay + '</span></td>' +
+            '<td class="td-fixed" style="color:#aaa;font-size:11px">' + fieldLabel + '</td>' +
+            '<td class="' + arCellClass  + '" title="' + arVal + '">' + trunc(arVal, 60) + '</td>' +
+            '<td class="' + dcgCellClass + '" title="' + dcgCellVal + '">' + trunc(dcgCellVal, 60) + '</td>' +
+            dchCell +
+            '</tr>';
+        } else {
+          tbodyHtml +=
+            '<tr class="' + rowClass + '">' +
+            '<td class="td-fixed" style="color:#aaa;font-size:11px">' + fieldLabel + '</td>' +
+            '<td class="' + arCellClass  + '" title="' + arVal + '">' + trunc(arVal, 60) + '</td>' +
+            '<td class="' + dcgCellClass + '" title="' + dcgCellVal + '">' + trunc(dcgCellVal, 60) + '</td>' +
+            dchCell +
+            '</tr>';
+        }
+      });
+
+      tbodyHtml +=
+        '<tr style="background:#000;height:6px">' +
+        '<td colspan="' + colSpan + '" style="padding:0;border-bottom:2px solid #2a2a2a"></td>' +
+        '</tr>';
+    });
+
+    tableHtml =
+      '<div class="table-wrapper">' +
+      '<div class="table-header-bar">' +
+      '<h3>🔍 Validation Results</h3>' +
+      '<div style="display:flex;align-items:center;gap:12px">' +
+      '<span><span class="src-ar">ALL REGIONS</span> vs <span class="src-dcg">DCG</span>' +
+      (hasDch ? ' vs <span class="src-dch">DCH</span>' : '') + '</span>' +
+      '<span style="color:#888">Showing ' + displayed.length + ' of ' + totalCount + ' records</span>' +
+      '<span style="font-size:10px;color:#f8ff00">★ = Primary matching keys</span>' +
+      '</div></div>' +
+      '<div class="table-scroll"><table class="val-table">' +
+      theadHtml + '<tbody>' + tbodyHtml + '</tbody>' +
+      '</table></div></div>';
+  }
+
+  container.innerHTML = headerHtml + alertHtml + summaryHtml + searchBarHtml + filterHtml + tableHtml;
+}
+
+/* ═══════════════════════════════════════════════
+   UPDATE INDICATORS
+═══════════════════════════════════════════════ */
+function updateIndicators(data) {
+  var invSrvCount = 0, noWmkCount = 0, dolbyCount = 0, hevcCount = 0;
+  data.forEach(function(s) {
+    var wmk  = safeStr(s.watermarking).toUpperCase();
+    var dc   = safeStr(s.dolbyConfig).toUpperCase();
+    var hetn = safeStr(s.heEventTypeName).toUpperCase();
+    var raw  = s._raw || {};
+    if (wmk.indexOf('INVISIBLE_SERVER') !== -1 ||
+        hetn.indexOf('INVISIBLE_SERVER') !== -1 ||
+        safeStr(raw.invisibleServer || '').toUpperCase() === 'TRUE') invSrvCount++;
+    if (wmk === 'NO_WATERMARKING' || wmk === 'NONE' || wmk === '—') noWmkCount++;
+    if (dc !== '—' && dc !== 'NONE' && dc !== '') dolbyCount++;
+    if (hetn.indexOf('HEVC') !== -1 || dc.indexOf('HEVC') !== -1 ||
+        safeStr(raw.codec      || '').toUpperCase().indexOf('HEVC') !== -1 ||
+        safeStr(raw.videoCodec || '').toUpperCase().indexOf('HEVC') !== -1 ||
+        safeStr(raw.hevc       || '').toUpperCase() === 'TRUE') hevcCount++;
+  });
+  document.getElementById('indInvSrv').textContent = invSrvCount;
+  document.getElementById('indNoWmk').textContent  = noWmkCount;
+  document.getElementById('indDolby').textContent  = dolbyCount;
+  document.getElementById('indHevc').textContent   = hevcCount;
+  document.getElementById('streamIndicators').style.display = 'flex';
+}
+
+function showLoading(label) {
+  document.getElementById('mainContent').innerHTML =
+    '<div class="loading-container"><div class="spinner"></div>' +
+    '<div class="loading-text">Fetching live stream data for ' + (label||'') + '...</div></div>';
+}
+
+function showError(e) {
+  document.getElementById('mainContent').innerHTML =
+    '<div class="error-box"><h3>⚠️ Failed to Load Data</h3>' +
+    '<p>' + e.message + '</p>' +
+    '<p style="margin-top:10px;color:#ffcc00">Make sure server.js is running: ' +
+    '<strong>node server.js</strong></p></div>';
+}
+
+function updateStats() {
+  document.getElementById('totalCount').textContent    = allData.length;
+  document.getElementById('filteredCount').textContent = filteredData.length;
+  document.getElementById('drmCount').textContent      =
+    allData.filter(function(s){ return s.drmRequired === true || s.drmRequired === 'true'; }).length;
+}
+
+function setStatus(type, msg) {
+  document.getElementById('statusIndicator').className = 'status-indicator ' + type;
+  document.getElementById('statusText').textContent    = msg;
+}
+
+function trunc(s, n) {
+  if (!s || s === '—') return '—';
+  var str = safeStr(s);
+  return str.length > n ? str.substring(0, n-1) + '…' : str;
+}
+
+/* ═══════════════════════════════════════════════
+   DATE & TIME FORMATTERS (Readable Date + UTC Time)
+═══════════════════════════════════════════════ */
+function fmtDate(ts) {
+  if (!ts) return '—';
+  var n = Number(ts);
+  var d;
+  if (!isNaN(n) && n > 1000000000000)   d = new Date(n);
+  else if (!isNaN(n) && n > 1000000000) d = new Date(n * 1000);
+  else                                   d = new Date(ts);
+  if (isNaN(d.getTime())) return '—';
+  var dd = String(d.getUTCDate()).padStart(2, '0');
+  var mm = String(d.getUTCMonth() + 1).padStart(2, '0');
+  var yyyy = d.getUTCFullYear();
+  return dd + '/' + mm + '/' + yyyy;
+}
+
+function fmtTime(ts) {
+  if (!ts) return '';
+  var n = Number(ts);
+  var d;
+  if (!isNaN(n) && n > 1000000000000)   d = new Date(n);
+  else if (!isNaN(n) && n > 1000000000) d = new Date(n * 1000);
+  else                                   d = new Date(ts);
+  if (isNaN(d.getTime())) return '';
+  var hh  = String(d.getUTCHours()).padStart(2, '0');
+  var min = String(d.getUTCMinutes()).padStart(2, '0');
+  var ss  = String(d.getUTCSeconds()).padStart(2, '0');
+  return hh + ':' + min + ':' + ss + ' UTC';
+}
+
+function fmtDateTimeHtml(ts) {
+  if (!ts || ts === '—') return '<span style="color:#555">—</span>';
+  var dStr = fmtDate(ts);
+  var tStr = fmtTime(ts);
+  if (dStr === '—') return '<span style="color:#555">—</span>';
+  return '<div class="time-date">' + dStr + '</div><div class="time-time">' + tStr + '</div>';
+}
+
+/* ═══════════════════════════════════════════════
+   GET ALL CURRENTLY FILTERED / VISIBLE DATA
+═══════════════════════════════════════════════ */
+function getCurrentFilteredDataset() {
+  var q = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+  if (isAllMode) {
+    var result = [];
+    var regionResults = [];
+
+    COUNTRIES.forEach(function(c) {
+      var streams = allRegionsData[c] || [];
+      var filtered = streams.filter(function(s) {
+        return evaluateRecordFilters(s, q);
+      });
+      regionResults.push({
+        country: c,
+        filteredData: filtered
+      });
+    });
+
+    var nonCentral = regionResults.filter(function(r) { return r.country !== 'Central'; });
+    var central    = regionResults.find(function(r) { return r.country === 'Central'; });
+
+    var withData    = nonCentral.filter(function(r) { return r.filteredData.length > 0; });
+    var withoutData = nonCentral.filter(function(r) { return r.filteredData.length === 0; });
+
+    var ordered = withData.concat(withoutData);
+    if (central) ordered.push(central);
+
+    ordered.forEach(function(item) {
+      item.filteredData.forEach(function(s) {
+        result.push(s);
+      });
+    });
+
+    return result;
+  } else {
+    return filteredData;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   COPY COLUMN VALUES (Filtered Data Only)
+═══════════════════════════════════════════════ */
+function copyColumnData(e, colId) {
+  e.preventDefault();
+  e.stopPropagation();
+
+  var dataset = getCurrentFilteredDataset();
+  if (!dataset || dataset.length === 0) {
+    setStatus('error', 'No rows available to copy in this column.');
+    return;
+  }
+
+  var values = dataset.map(function(s) {
+    if (colId === 'streamStartTime' || colId === 'streamEndTime' || colId === 'lastModTime') {
+      var ts = s[colId];
+      if (!ts || ts === '—') return '—';
+      return fmtDate(ts) + ' ' + fmtTime(ts);
+    }
+    return safeStr(s[colId]);
+  });
+
+  var textToCopy = values.join('\n');
+
+  navigator.clipboard.writeText(textToCopy).then(function() {
+    var colObj = ALL_AVAILABLE_COLUMNS.find(function(c) { return c.id === colId; });
+    var colName = colObj ? colObj.label : colId;
+    setStatus('success', '📋 Copied ' + values.length + ' rows of "' + colName + '" to clipboard!');
+  }).catch(function(err) {
+    setStatus('error', 'Failed to copy column data: ' + err.message);
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   BUILD TH CELL WITH RESIZE DRAGGER & COPY ICON
+═══════════════════════════════════════════════ */
+function thCell(col, label) {
+  if (selectedColumns.indexOf(col) === -1) return '';
+  var active = sortCol === col;
+  var icon   = active ? (sortDir === 'asc' ? ' ▲' : ' ▼') : ' ⇅';
+  var style  = active ? 'color:#fff;' : '';
+
+  var width = columnWidths[col];
+  if (!width) {
+    var defaultObj = ALL_AVAILABLE_COLUMNS.find(function(c) { return c.id === col; });
+    width = defaultObj ? defaultObj.defaultWidth : '140px';
+  }
+
+  var widthStyle = 'width:' + width + ';min-width:' + width + ';';
+
+  return '<th id="th-' + col + '" style="' + style + widthStyle + '">' +
+    '<div class="th-content">' +
+      '<span class="th-label-group" onclick="sortBy(\'' + col + '\')">' +
+        label + '<span style="opacity:' + (active?1:0.4) + ';font-size:10px">' + icon + '</span>' +
+      '</span>' +
+      '<button class="btn-copy-col" title="Copy visible rows of ' + label + '" onclick="copyColumnData(event, \'' + col + '\')">📋</button>' +
+    '</div>' +
+    '<div class="col-resizer" onmousedown="initResize(event, \'' + col + '\')"></div>' +
+    '</th>';
+}
+
+/* ═══════════════════════════════════════════════
+   COLUMN RESIZING ENGINE
+═══════════════════════════════════════════════ */
+var resizingCol = null;
+var startX = 0;
+var startWidth = 0;
+
+function initResize(e, colId) {
+  e.preventDefault();
+  e.stopPropagation();
+  resizingCol = colId;
+  startX = e.pageX;
+  var th = document.getElementById('th-' + colId);
+  startWidth = th.offsetWidth;
+
+  document.addEventListener('mousemove', handleMouseMove);
+  document.addEventListener('mouseup', handleMouseUp);
+}
+
+function handleMouseMove(e) {
+  if (!resizingCol) return;
+  var diff = e.pageX - startX;
+  var newWidth = Math.max(50, startWidth + diff);
+  columnWidths[resizingCol] = newWidth + 'px';
+
+  var ths = document.querySelectorAll('#th-' + resizingCol);
+  ths.forEach(function(th) {
+    th.style.width = newWidth + 'px';
+    th.style.minWidth = newWidth + 'px';
+  });
+}
+
+function handleMouseUp() {
+  resizingCol = null;
+  document.removeEventListener('mousemove', handleMouseMove);
+  document.removeEventListener('mouseup', handleMouseUp);
+}
+
+/* ═══════════════════════════════════════════════
+   BUILD TABLE ROWS WITH COLUMN SELECTION & HOVER
+   (Preserves selection order)
+═══════════════════════════════════════════════ */
+function buildRows(pageData, startIndex, showCountry) {
+  var rows = '';
+  for (var i = 0; i < pageData.length; i++) {
+    var s    = pageData[i];
+    var rn   = startIndex + i + 1;
+    var sst  = s.streamStartTime;
+    var set_ = s.streamEndTime;
+    var sid  = safeStr(s.streamId);
+    var cid  = safeStr(s.competitionId);
+    var rid  = safeStr(s.rightsId);
+    var lmt  = s.lastModTime || null;
+    var desc = safeStr(s.description);
+    var oid  = safeStr(s.overrideId);
+    var oaid = safeStr(s.oaId);
+    var rsid = safeStr(s.rsid);
+    var mflId= safeStr(s.mflId);
+    var cc   = safeStr(s.closedCaptions);
+    var ccc  = safeStr(s.ccConfig);
+    var al   = safeStr(s.audioLangs);
+    var ac   = safeStr(s.audioConfig);
+    var hetn = safeStr(s.heEventTypeName);
+    var wmk  = safeStr(s.watermarking);
+    var dc   = safeStr(s.dolbyConfig);
+    var heR  = safeStr(s.heResilience);
+    var mta  = safeStr(s.mta);
+    var tier = safeStr(s.prodTier);
+    var drm  = s.drmRequired;
+
+    var wmkLow   = wmk.toLowerCase();
+    var wmkClass = (wmkLow === 'no_watermarking' || wmkLow === 'none' || wmk === '—')
+                   ? 'badge-gray'
+                   : wmkLow.indexOf('nagra') !== -1 ? 'badge-purple' : 'badge-blue';
+    var heRClass  = (heR === 'Yes' || heR === 'YES' || heR === 'true') ? 'badge-green' : 'badge-gray';
+    var hetnClass = (hetn !== '—' && hetn !== '') ? 'badge-purple' : 'badge-gray';
+
+    var dcHtml = '<span style="color:#555">—</span>';
+    if (dc !== '—') {
+      dcHtml = dc.split('\n').map(function(line) {
+        return '<div class="dolby-cell" title="' + line + '">' + line + '</div>';
+      }).join('');
+    }
+
+    var acHtml   = (ac !== '—') ? '<div class="audio-cell" title="' + ac + '">' + ac + '</div>' : '<span style="color:#555">—</span>';
+    var alHtml   = (al !== '—') ? '<span class="id-full" title="' + al + '">' + al + '</span>' : '<span style="color:#555">—</span>';
+    var ccHtml   = (cc !== '—') ? '<span class="badge badge-gray" title="' + cc + '">' + cc + '</span>' : '<span style="color:#555">None</span>';
+    var cccHtml  = (ccc !== '—' && ccc !== 'none') ? '<span class="id-full" title="' + ccc + '">' + ccc + '</span>' : '<span style="color:#555">none</span>';
+    var rsidHtml = (rsid !== '—') ? '<span class="id-full" title="' + rsid + '">' + rsid + '</span>' : '<span style="color:#555">—</span>';
+    var mflHtml  = (mflId !== '—') ? '<span class="id-full" title="' + mflId + '">' + mflId + '</span>' : '<span style="color:#555">—</span>';
+    var mtaHtml  = (mta  !== '—') ? '<div class="mta-cell" title="' + mta + '">' + mta + '</div>' : '<span style="color:#555">—</span>';
+    var oidHtml  = (oid  !== '—') ? '<span class="override-cell" title="' + oid + '">' + oid  + '</span>' : '<span style="color:#555">—</span>';
+    var sidHtml  = (sid  !== '—') ? '<span class="stream-id" title="' + sid + '">'     + sid  + '</span>' : '<span style="color:#555">—</span>';
+    var cidHtml  = (cid  !== '—') ? '<span class="id-full" title="' + cid + '">'       + cid  + '</span>' : '<span style="color:#555">—</span>';
+    var ridHtml  = (rid  !== '—') ? '<span class="id-full" title="' + rid + '">'       + rid  + '</span>' : '<span style="color:#555">—</span>';
+    var oaidHtml = (oaid !== '—') ? '<span class="id-full" title="' + oaid + '">'      + oaid + '</span>' : '<span style="color:#555">—</span>';
+    var tierHtml = (tier !== '—') ? '<span class="tier-cell" title="Tier ' + tier + '">' + tier + '</span>' : '<span style="color:#555">—</span>';
+    var drmHtml  = drm ? '<span class="badge badge-green" title="DRM Required: True">true</span>' : '<span class="badge badge-gray" title="DRM Required: False">false</span>';
+
+    var countryCol = showCountry
+      ? '<td><span class="country-tag" style="font-size:10px">' + safeStr(s._country) + '</span></td>'
+      : '';
+
+    var cellsMap = {
+      streamStartTime : '<td title="' + fmtDate(sst) + ' ' + fmtTime(sst) + '">' + fmtDateTimeHtml(sst) + '</td>',
+      streamEndTime   : '<td title="' + fmtDate(set_) + ' ' + fmtTime(set_) + '">' + fmtDateTimeHtml(set_) + '</td>',
+      prodTier        : '<td title="' + tier + '">' + tierHtml + '</td>',
+      drmRequired     : '<td title="' + (drm ? 'true' : 'false') + '">' + drmHtml  + '</td>',
+      streamId        : '<td title="' + sid + '">' + sidHtml  + '</td>',
+      competitionId   : '<td title="' + cid + '">' + cidHtml  + '</td>',
+      rightsId        : '<td title="' + rid + '">' + ridHtml  + '</td>',
+      lastModTime     : '<td title="' + fmtDate(lmt) + ' ' + fmtTime(lmt) + '">' + fmtDateTimeHtml(lmt) + '</td>',
+      description     : '<td title="' + desc + '"><div class="cell-desc">' + desc + '</div></td>',
+      overrideId      : '<td title="' + oid + '">' + oidHtml  + '</td>',
+      oaId            : '<td title="' + oaid + '">' + oaidHtml + '</td>',
+      rsid            : '<td title="' + rsid + '">' + rsidHtml + '</td>',
+      mflId           : '<td title="' + mflId + '">' + mflHtml  + '</td>',
+      closedCaptions  : '<td title="' + cc + '">' + ccHtml   + '</td>',
+      ccConfig        : '<td title="' + ccc + '">' + cccHtml  + '</td>',
+      audioLangs      : '<td title="' + al + '">' + alHtml   + '</td>',
+      audioConfig     : '<td title="' + ac + '">' + acHtml   + '</td>',
+      heEventTypeName : '<td title="' + hetn + '"><span class="badge ' + hetnClass + '">' + hetn + '</span></td>',
+      watermarking    : '<td title="' + wmk + '"><span class="badge ' + wmkClass  + '">' + wmk  + '</span></td>',
+      dolbyConfig     : '<td title="' + dc + '">' + dcHtml + '</td>',
+      heResilience    : '<td title="' + heR + '"><span class="badge ' + heRClass  + '">' + heR + '</span></td>',
+      mta             : '<td title="' + mta + '">' + mtaHtml + '</td>'
+    };
+
+    var rowContent = '';
+    selectedColumns.forEach(function(colId) {
+      rowContent += cellsMap[colId] || '<td>—</td>';
+    });
+
+    rows +=
+      '<tr>' +
+      '<td class="row-number">' + rn + '</td>' +
+      countryCol +
+      rowContent +
+      '</tr>';
+  }
+  return rows;
+}
+
+/* ═══════════════════════════════════════════════
+   BUILD THEAD
+   (Preserves chronological selection order)
+═══════════════════════════════════════════════ */
+function buildThead(showCountry) {
+  var countryTh = showCountry ? '<th style="cursor:default;width:90px">Region</th>' : '';
+  var thCells = '';
+
+  selectedColumns.forEach(function(colId) {
+    var colObj = ALL_AVAILABLE_COLUMNS.find(function(c) { return c.id === colId; });
+    if (colObj) {
+      thCells += thCell(colObj.id, colObj.label);
+    }
+  });
+
+  return '<thead><tr>' +
+    '<th style="width:40px;cursor:default">#</th>' +
+    countryTh +
+    thCells +
+    '</tr></thead>';
+}
+
+/* ═══════════════════════════════════════════════
+   RENDER TABLE — Single Region
+═══════════════════════════════════════════════ */
+function renderTable() {
+  var container  = document.getElementById('mainContent');
+  var totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
+  var start      = (currentPage - 1) * PAGE_SIZE;
+  var pageData   = filteredData.slice(start, start + PAGE_SIZE);
+
+  if (filteredData.length === 0) {
+    container.innerHTML =
+      '<div class="empty-state"><div class="icon">🔍</div>' +
+      '<h3>No results found</h3>' +
+      '<p>' + (activeIndicatorFilter ? 'No records match the selected indicator filter.' :
+               filterState.active    ? 'No records match the applied filter criteria.'   :
+                                       'Try a different search keyword') + '</p>' +
+      '</div>';
+    return;
+  }
+
+  container.innerHTML =
+    '<div class="table-wrapper">' +
+    '<div class="table-header-bar">' +
+    '<h3>📺 Live Streams</h3>' +
+    '<span class="country-tag">🌍 ' + selectedCountry + '</span>' +
+    '<span>Showing ' + (start+1) + '–' +
+      Math.min(start + PAGE_SIZE, filteredData.length) +
+      ' of ' + filteredData.length + ' streams</span>' +
+    '</div>' +
+    '<div class="table-scroll"><table>' +
+    buildThead(false) +
+    '<tbody>' + buildRows(pageData, start, false) + '</tbody>' +
+    '</table></div>' +
+    buildPagination(totalPages) +
+    '</div>' +
+    '<div class="last-updated">' +
+    'Page ' + currentPage + ' of ' + totalPages +
+    ' &nbsp;|&nbsp; Total: ' + filteredData.length +
+    ' &nbsp;|&nbsp; Region: <strong style="color:#f8ff00">' + selectedCountry + '</strong>' +
+    (filterState.tier !== 'ALL' ? ' &nbsp;|&nbsp; Tier: <strong style="color:#f8ff00">' + filterState.tier + '</strong>' : '') +
+    (activeIndicatorFilter ? ' &nbsp;|&nbsp; Filter: <strong style="color:#f8ff00">' + activeIndicatorFilter.toUpperCase() + '</strong>' : '') +
+    (filterState.active ? ' &nbsp;|&nbsp; <strong style="color:#f8ff00">⚡ Filter Active</strong>' : '') +
+    ' &nbsp;|&nbsp; Updated: ' + new Date().toLocaleTimeString() +
+    '</div>';
+}
+
+/* ═══════════════════════════════════════════════
+   RENDER ALL REGIONS
+   (Matching regions FIRST, empty at bottom, Central ALWAYS LAST)
+═══════════════════════════════════════════════ */
+function renderAllRegions() {
+  var container  = document.getElementById('mainContent');
+  var q          = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+  var grandTotal = 0;
+
+  var regionResults = [];
+
+  COUNTRIES.forEach(function(c) {
+    var streams = allRegionsData[c] || [];
+
+    var filtered = streams.filter(function(s) {
+      return evaluateRecordFilters(s, q);
+    });
+
+    grandTotal += filtered.length;
+    regionResults.push({
+      country       : c,
+      totalRawCount : streams.length,
+      filteredData  : filtered
+    });
+  });
+
+  var nonCentralResults = regionResults.filter(function(r) { return r.country !== 'Central'; });
+  var centralResult     = regionResults.find(function(r) { return r.country === 'Central'; });
+
+  var withData    = nonCentralResults.filter(function(r) { return r.filteredData.length > 0; });
+  var withoutData = nonCentralResults.filter(function(r) { return r.filteredData.length === 0; });
+
+  var orderedRegions = withData.concat(withoutData);
+  if (centralResult) {
+    orderedRegions.push(centralResult);
+  }
+
+  var html = '';
+  orderedRegions.forEach(function(item) {
+    var c        = item.country;
+    var filtered = item.filteredData;
+    var streams  = item.totalRawCount;
+
+    var statusColor = filtered.length === 0 ? '#ff4444' : '#00cc66';
+    var statusLabel = filtered.length === 0 ? (streams === 0 ? '⚠️ No data' : '0 matching streams') : '✅ ' + filtered.length + ' streams';
+
+    html +=
+      '<div class="region-section">' +
+      '<div class="region-header">' +
+      '<h3>🌍 ' + c + '</h3>' +
+      '<span style="color:' + statusColor + ';font-weight:700">' + statusLabel + '</span>' +
+      '</div>';
+
+    if (filtered.length === 0) {
+      html +=
+        '<div style="background:#111;border:1px solid #2a2a2a;border-top:none;' +
+        'padding:20px;text-align:center;color:#555;border-radius:0 0 8px 8px">' +
+        (streams === 0 ? 'No data returned from API' : 'No results match current filters') +
+        '</div>';
+    } else {
+      html +=
+        '<div class="table-wrapper" style="border-radius:0 0 12px 12px;margin-top:0">' +
+        '<div class="table-scroll"><table>' +
+        buildThead(false) +
+        '<tbody>' + buildRows(filtered, 0, false) + '</tbody>' +
+        '</table></div></div>';
+    }
+    html += '</div>';
+  });
+
+  var summary =
+    '<div style="background:#1a1a00;border:1px solid #f8ff00;border-radius:10px;' +
+    'padding:12px 20px;margin-bottom:20px;display:flex;align-items:center;' +
+    'justify-content:space-between;flex-wrap:wrap;gap:10px">' +
+    '<span style="color:#f8ff00;font-weight:700;font-size:14px">🌐 All Regions Summary</span>' +
+    '<span style="color:#aaa;font-size:13px">' +
+    COUNTRIES.length + ' regions &nbsp;|&nbsp; ' +
+    '<strong style="color:#f8ff00">' + grandTotal + '</strong> streams shown' +
+    (filterState.tier !== 'ALL' ? ' &nbsp;|&nbsp; Tier: <strong style="color:#f8ff00">' + filterState.tier + '</strong>' : '') +
+    (q ? ' &nbsp;|&nbsp; Search: <strong style="color:#f8ff00">"' + q + '"</strong>' : '') +
+    (activeIndicatorFilter ? ' &nbsp;|&nbsp; Filter: <strong style="color:#f8ff00">' + activeIndicatorFilter.toUpperCase() + '</strong>' : '') +
+    (filterState.active ? ' &nbsp;|&nbsp; <strong style="color:#f8ff00">⚡ Filter Active</strong>' : '') +
+    ' &nbsp;|&nbsp; Updated: ' + new Date().toLocaleTimeString() +
+    '</span></div>';
+
+  container.innerHTML = summary + html;
+}
+
+/* ═══════════════════════════════════════════════
+   PAGINATION
+═══════════════════════════════════════════════ */
+function buildPagination(totalPages) {
+  if (totalPages <= 1) return '';
+  var html = '<div class="pagination">';
+  html += '<button class="page-btn" onclick="goPage(' + (currentPage-1) + ')"' +
+          (currentPage === 1 ? ' disabled' : '') + '>&#x2039; Prev</button>';
+
+  var pages = getPageRange(currentPage, totalPages);
+  for (var i = 0; i < pages.length; i++) {
+    if (pages[i] === '...') {
+      html += '<span style="color:#555;padding:0 4px">&#x2026;</span>';
+    } else {
+      html += '<button class="page-btn' + (pages[i] === currentPage ? ' active' : '') +
+              '" onclick="goPage(' + pages[i] + ')">' + pages[i] + '</button>';
+    }
+  }
+  html += '<button class="page-btn" onclick="goPage(' + (currentPage+1) + ')"' +
+          (currentPage === totalPages ? ' disabled' : '') + '>Next &#x203A;</button>';
+  html += '</div>';
+  return html;
+}
+
+function getPageRange(cur, total) {
+  if (total <= 7) {
+    var arr = [];
+    for (var i = 1; i <= total; i++) arr.push(i);
+    return arr;
+  }
+  var pages = [1];
+  if (cur > 3) pages.push('...');
+  var s = Math.max(2, cur - 1);
+  var e = Math.min(total - 1, cur + 1);
+  for (var i = s; i <= e; i++) pages.push(i);
+  if (cur < total - 2) pages.push('...');
+  pages.push(total);
+  return pages;
+}
+
+function goPage(p) {
+  var totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
+  if (p < 1 || p > totalPages) return;
+  currentPage = p;
+  renderTable();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ═══════════════════════════════════════════════
+   SORT (Preserves Horizontal Scroll Position)
+═══════════════════════════════════════════════ */
+function sortBy(col) {
+  var scrolls = [];
+  var scrollContainers = document.querySelectorAll('.table-scroll');
+  scrollContainers.forEach(function(el) {
+    scrolls.push(el.scrollLeft);
+  });
+
+  if (sortCol === col) {
+    sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortCol = col; sortDir = 'asc';
+  }
+  filteredData.sort(function(a, b) {
+    var va = safeStr(a[col] !== undefined && a[col] !== null ? a[col] : '');
+    var vb = safeStr(b[col] !== undefined && b[col] !== null ? b[col] : '');
+    if (va < vb) return sortDir === 'asc' ? -1 :  1;
+    if (va > vb) return sortDir === 'asc' ?  1 : -1;
+    return 0;
+  });
+
+  if (isAllMode) {
+    COUNTRIES.forEach(function(c) {
+      if (allRegionsData[c]) {
+        allRegionsData[c].sort(function(a, b) {
+          var va = safeStr(a[col] !== undefined && a[col] !== null ? a[col] : '');
+          var vb = safeStr(b[col] !== undefined && b[col] !== null ? b[col] : '');
+          if (va < vb) return sortDir === 'asc' ? -1 :  1;
+          if (va > vb) return sortDir === 'asc' ?  1 : -1;
+          return 0;
+        });
+      }
+    });
+  }
+
+  currentPage = 1;
+  refreshCurrentTableView();
+
+  var newScrollContainers = document.querySelectorAll('.table-scroll');
+  newScrollContainers.forEach(function(el, i) {
+    if (scrolls[i] !== undefined) {
+      el.scrollLeft = scrolls[i];
+    }
+  });
+}
+
+function filterTable() {
+  if (isValidationMode) return;
+  if (isAllMode) { renderAllRegions(); return; }
+  applyAllFilters();
+  renderTable();
+}
+
+function toggleAutoRefresh() {
+  var checked  = document.getElementById('autoRefresh').checked;
+  var interval = parseInt(document.getElementById('refreshInterval').value);
+  if (checked) {
+    if (!selectedCountry) {
+      document.getElementById('autoRefresh').checked = false;
+      setStatus('error','Select a region before enabling auto-refresh.');
+      return;
+    }
+    refreshTimer = setInterval(fetchData, interval);
+    setStatus('success','Auto-refresh ON every ' + (interval/1000) + 's — ' + selectedCountry);
+  } else {
+    clearInterval(refreshTimer);
+    refreshTimer = null;
+    setStatus('success','Auto-refresh OFF');
+  }
+}
+
+function updateRefreshInterval() {
+  var checked = document.getElementById('autoRefresh').checked;
+  if (checked) {
+    clearInterval(refreshTimer);
+    var interval = parseInt(document.getElementById('refreshInterval').value);
+    refreshTimer = setInterval(fetchData, interval);
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   EXPORT CSV (Filtered & Displayed Data ONLY)
+═══════════════════════════════════════════════ */
+function exportCSV() {
+  var dataToExport = getCurrentFilteredDataset();
+  if (!dataToExport || !dataToExport.length) {
+    setStatus('error', 'No filtered records to export.');
+    return;
+  }
+
+  var activeHeaders = ['region'].concat(selectedColumns);
+  var rows = [activeHeaders.join(',')];
+
+  for (var i = 0; i < dataToExport.length; i++) {
+    var s = dataToExport[i];
+    var row = [safeStr(s._country)];
+    selectedColumns.forEach(function(colId) {
+      if (colId === 'streamStartTime' || colId === 'streamEndTime' || colId === 'lastModTime') {
+        var ts = s[colId];
+        row.push(ts && ts !== '—' ? (fmtDate(ts) + ' ' + fmtTime(ts)) : '—');
+      } else {
+        row.push(safeStr(s[colId]));
+      }
+    });
+    rows.push(row.map(function(v) {
+      return '"' + v.replace(/"/g, '""') + '"';
+    }).join(','));
+  }
+
+  var filename = isAllMode
+    ? 'dazn_streams_ALL_' + new Date().toISOString().slice(0,10) + '.csv'
+    : 'dazn_streams_' + selectedCountry + '_' + new Date().toISOString().slice(0,10) + '.csv';
+
+  var blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href     = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+  setStatus('success', '📥 Exported ' + dataToExport.length + ' filtered stream rows to CSV.');
+}
+</script>
+</body>
+</html>
