@@ -192,7 +192,7 @@ tbody td{padding:10px 14px;color:#ddd;vertical-align:middle;white-space:nowrap;o
 
 /* ══════════════════════════════════════════
    MK-EAE VALIDATION STYLES
-═══════════════════════════════════════════════ */
+═══════════════════════════════════════════ */
 .mismatch-alert{background:#3d0000;border:2px solid #ff4444;border-radius:10px;padding:14px 20px;margin-bottom:18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;animation:fadeIn 0.3s ease}
 .mismatch-alert .alert-icon{font-size:22px}
 .mismatch-alert .alert-title{color:#ff4444;font-weight:700;font-size:14px}
@@ -373,7 +373,7 @@ tbody td{padding:10px 14px;color:#ddd;vertical-align:middle;white-space:nowrap;o
   <!-- Column Selector Dropdown -->
   <div class="col-selector-container">
     <button class="col-selector-btn" id="colToggleBtn" onclick="toggleColumnMenu()">
-      ⚙️ Select Columns (<span id="selectedColCount">22</span>) ▾
+      ⚙️ Select Columns (<span id="selectedColCount">24</span>) ▾
     </button>
     <div class="col-dropdown-menu" id="colDropdownMenu">
       <div class="col-dropdown-header">
@@ -451,43 +451,43 @@ tbody td{padding:10px 14px;color:#ddd;vertical-align:middle;white-space:nowrap;o
 <script>
 /* ═══════════════════════════════════════════════
    CONFIGURATION & CONSTANTS
-   Central region is strictly placed at the end
 ═══════════════════════════════════════════════ */
-var API_BASE      = '/api/streams';
-var API_ALL       = '/api/streams/all';
-var API_MKEAE_DCG = '/api/mkeae/dcg';
-var API_MKEAE_DCH = '/api/mkeae/dch';
+var API_BASE      = 'http://localhost:3000/api/streams';
+var API_ALL       = 'http://localhost:3000/api/streams/all';
+var API_MKEAE_DCG = 'http://localhost:3000/api/mkeae/dcg';
+var API_MKEAE_DCH = 'http://localhost:3000/api/mkeae/dch';
 
 var COUNTRIES = [
   'Japan','DACH','Canada','US',
   'Italy','Spain','Brazil','ROW',
-  'Belgium','France','Portugal','Taiwan',
-  'Central'
+  'Belgium','France','Portugal','Taiwan'
 ];
 
 var ALL_AVAILABLE_COLUMNS = [
-  { id: 'streamStartTime', label: 'Stream Start',    defaultWidth: '160px' },
-  { id: 'streamEndTime',   label: 'Stream End',      defaultWidth: '160px' },
-  { id: 'prodTier',        label: 'Tier',            defaultWidth: '80px'  },
-  { id: 'drmRequired',     label: 'DRM',             defaultWidth: '80px'  },
-  { id: 'streamId',        label: 'Stream ID',       defaultWidth: '140px' },
-  { id: 'competitionId',   label: 'Competition ID',  defaultWidth: '150px' },
-  { id: 'rightsId',        label: 'Rights ID',       defaultWidth: '140px' },
-  { id: 'lastModTime',     label: 'Last Modified',   defaultWidth: '160px' },
-  { id: 'description',     label: 'Description',     defaultWidth: '280px' },
-  { id: 'overrideId',      label: 'Override ID',     defaultWidth: '130px' },
-  { id: 'oaId',            label: 'OA ID',           defaultWidth: '120px' },
-  { id: 'rsid',            label: 'RSID',            defaultWidth: '140px' },
-  { id: 'mflId',           label: 'MFL Id',          defaultWidth: '220px' },
-  { id: 'closedCaptions',  label: 'Closed Captions', defaultWidth: '140px' },
-  { id: 'ccConfig',        label: 'cc Config',       defaultWidth: '160px' },
-  { id: 'audioLangs',      label: 'AudioLangs',      defaultWidth: '150px' },
-  { id: 'audioConfig',     label: 'Audio Config',    defaultWidth: '220px' },
-  { id: 'heEventTypeName', label: 'HE Event Type',   defaultWidth: '140px' },
-  { id: 'watermarking',    label: 'Watermarking',    defaultWidth: '160px' },
-  { id: 'dolbyConfig',     label: 'Dolby Config',    defaultWidth: '160px' },
-  { id: 'heResilience',    label: 'HE Resilience',   defaultWidth: '110px' },
-  { id: 'mta',             label: 'MTA',             defaultWidth: '80px'  }
+  { id: 'streamStartTime', label: 'Stream Start',     defaultWidth: '160px' },
+  { id: 'streamEndTime',   label: 'Stream End',       defaultWidth: '160px' },
+  { id: 'prodTier',        label: 'Tier',             defaultWidth: '80px'  },
+  { id: 'drmRequired',     label: 'DRM',              defaultWidth: '80px'  },
+  { id: 'streamId',        label: 'Stream ID',        defaultWidth: '140px' },
+  { id: 'competitionId',   label: 'Competition ID',   defaultWidth: '150px' },
+  { id: 'rightsId',        label: 'Rights ID',        defaultWidth: '140px' },
+  { id: 'lastModTime',     label: 'Last Modified',    defaultWidth: '160px' },
+  { id: 'description',     label: 'Description',      defaultWidth: '280px' },
+  { id: 'overrideId',      label: 'Override ID',      defaultWidth: '130px' },
+  { id: 'oaId',            label: 'OA ID',            defaultWidth: '120px' },
+  { id: 'rsid',            label: 'RSID',             defaultWidth: '140px' },
+  { id: 'channelNum',      label: 'Channel Num',      defaultWidth: '110px' },
+  { id: 'motionGraphics',  label: 'Motion Graphics',  defaultWidth: '180px' },
+  { id: 'mflId',           label: 'MFL Id',           defaultWidth: '220px' },
+  { id: 'closedCaptions',  label: 'Closed Captions',  defaultWidth: '140px' },
+  { id: 'ccConfig',        label: 'cc Config',        defaultWidth: '160px' },
+  { id: 'audioLangs',      label: 'AudioLangs',       defaultWidth: '150px' },
+  { id: 'audioConfig',     label: 'Audio Config',     defaultWidth: '220px' },
+  { id: 'heEventTypeName', label: 'HE Event Type',    defaultWidth: '140px' },
+  { id: 'watermarking',    label: 'Watermarking',     defaultWidth: '160px' },
+  { id: 'dolbyConfig',     label: 'Dolby Config',     defaultWidth: '160px' },
+  { id: 'heResilience',    label: 'HE Resilience',    defaultWidth: '110px' },
+  { id: 'mta',             label: 'MTA',              defaultWidth: '80px'  }
 ];
 
 /* ═══════════════════════════════════════════════
@@ -693,6 +693,8 @@ function evaluateRecordFilters(s, q) {
       safeStr(s.overrideId).toLowerCase().indexOf(q)       !== -1 ||
       safeStr(s.oaId).toLowerCase().indexOf(q)             !== -1 ||
       safeStr(s.rsid).toLowerCase().indexOf(q)             !== -1 ||
+      safeStr(s.channelNum).toLowerCase().indexOf(q)       !== -1 ||
+      safeStr(s.motionGraphics).toLowerCase().indexOf(q)   !== -1 ||
       safeStr(s.mflId).toLowerCase().indexOf(q)            !== -1 ||
       safeStr(s.closedCaptions).toLowerCase().indexOf(q)   !== -1 ||
       safeStr(s.ccConfig).toLowerCase().indexOf(q)         !== -1 ||
@@ -1090,6 +1092,22 @@ function normalise(s) {
   /* rsid: regionalSupplierId / rsid */
   var rsidStr = safeStr(s.regionalSupplierId !== undefined ? s.regionalSupplierId : s.rsid);
 
+  /* Channel Num: from distributionAddresses / dstAddr */
+  var chNumStr = 'None';
+  var rawDstAddr = s.distributionAddresses !== undefined ? s.distributionAddresses : s.dstAddr;
+  if (Array.isArray(rawDstAddr) && rawDstAddr.length > 0) {
+    var chNums = [];
+    rawDstAddr.forEach(function(d) {
+      if (d && d.channelNum !== undefined && d.channelNum !== null && String(d.channelNum).trim() !== '') {
+        chNums.push(String(d.channelNum).trim());
+      }
+    });
+    if (chNums.length > 0) chNumStr = chNums.join(', ');
+  }
+
+  /* Motion Graphics: motionGraphics / mgfx */
+  var mgfxStr = safeStr(s.motionGraphics !== undefined ? s.motionGraphics : s.mgfx);
+
   /* MFL ID: links section with id */
   var mflId = '—';
   if (Array.isArray(s.links)) {
@@ -1162,6 +1180,8 @@ function normalise(s) {
     overrideId      : oid,
     oaId            : safeStr(s.oaId || '—'),
     rsid            : rsidStr,
+    channelNum      : chNumStr,
+    motionGraphics  : mgfxStr,
     mflId           : mflId,
     closedCaptions  : cc,
     ccConfig        : cccStr,
@@ -1206,30 +1226,7 @@ function normaliseMkEae(ev) {
     if (validConfigs.length > 0) ac = validConfigs.join(' | ');
   } else if (rawAc) { ac = safeStr(rawAc); }
 
-  var mta = 'N';
   var cv = ev.configValues || (ev._raw && ev._raw.configValues) || {};
-  var activeAudioCount = 0;
-
-  for (var k = 1; k <= 8; k++) {
-    var labelKey = 'audio' + k + 'label';
-    var langKey  = 'audio' + k + 'lang';
-    var labelVal = cv[labelKey] ? String(cv[labelKey]).trim() : '';
-    var langVal  = cv[langKey]  ? String(cv[langKey]).trim()  : '';
-
-    if (labelVal && labelVal.toUpperCase() !== 'UNUSED' && labelVal !== '') {
-      activeAudioCount++;
-    } else if (!labelVal && langVal && langVal.toUpperCase() !== 'QAU' && langVal.toUpperCase() !== 'UNUSED') {
-      activeAudioCount++;
-    }
-  }
-
-  if (activeAudioCount > 1) {
-    mta = 'Y';
-  } else if (activeAudioCount === 1) {
-    mta = 'N';
-  } else if (ev.multigame !== undefined && ev.multigame !== null) {
-    mta = (ev.multigame === true || ev.multigame === 'true' || ev.multigame === 'Y') ? 'Y' : 'N';
-  }
 
   /* Dolby enabled flag in EAE */
   var dEnabled = false;
@@ -1263,7 +1260,6 @@ function normaliseMkEae(ev) {
     dolbyConfig     : dEnabled ? 'true (enabled)' : 'false (disabled)',
     heResilience    : heR,
     audioConfig     : ac,
-    mta             : mta,
     _raw            : ev
   };
 }
@@ -1271,7 +1267,7 @@ function normaliseMkEae(ev) {
 /* ═══════════════════════════════════════════════
    MK-EAE COMPARISON ENGINE
    Primary Matching Keys: ★ Stream Start, ★ Description, ★ Override ID
-   Matching rule: All 3 must match before comparing remaining fields.
+   MTA removed completely from EAE comparison
 ═══════════════════════════════════════════════ */
 var COMPARE_FIELDS = [
   { key: 'streamStartTime',  label: 'Stream Start'  },
@@ -1285,8 +1281,7 @@ var COMPARE_FIELDS = [
   { key: 'watermarking',     label: 'Watermarking'  },
   { key: 'dolbyConfig',      label: 'Dolby Config'  },
   { key: 'heResilience',     label: 'HE Resilience' },
-  { key: 'audioConfig',      label: 'Audio Config'  },
-  { key: 'mta',              label: 'MTA'           }
+  { key: 'audioConfig',      label: 'Audio Config'  }
 ];
 
 var PRIMARY_MATCH_KEYS = [
@@ -1301,14 +1296,6 @@ function normaliseWmkForCompare(wmk) {
   if (w === 'INVISIBLE_SERVER' || w === 'OTHERS' || w === 'OTHER') return 'INVISIBLE_SERVER';
   if (w === 'NO_WATERMARKING'  || w === 'NONE'   || w === '')      return 'NO_WATERMARKING';
   return w;
-}
-
-function normaliseMtaForCompare(mta) {
-  if (!mta || mta === '—') return '—';
-  var m = mta.trim().toUpperCase();
-  if (m === 'TRUE'  || m === 'YES' || m === 'Y') return 'Y';
-  if (m === 'FALSE' || m === 'NO'  || m === 'N') return 'N';
-  return m;
 }
 
 function normaliseDateForCompare(ts) {
@@ -1346,9 +1333,6 @@ function compareField(fieldKey, arVal, mkVal, arRecord, mkRecord) {
     case 'watermarking':
       return { match: normaliseWmkForCompare(a) === normaliseWmkForCompare(m), arVal: a, mkVal: m };
 
-    case 'mta':
-      return { match: normaliseMtaForCompare(a) === normaliseMtaForCompare(m), arVal: a, mkVal: m };
-
     case 'dolbyConfig':
       var rawLiveDc = arRecord ? (arRecord._raw ? (arRecord._raw.dolbyConfig || arRecord._raw.dc) : null) : null;
       var liveHasDolby = false;
@@ -1372,10 +1356,11 @@ function compareField(fieldKey, arVal, mkVal, arRecord, mkRecord) {
   }
 }
 
+/* Include Override IDs starting with 1, 2, 4, and 5 */
 function isEligibleOverrideId(oid) {
   if (!oid || oid === '—') return false;
   return oid.split(',').map(function(x){return x.trim();})
-            .some(function(id){ return /^[124]/.test(id); });
+            .some(function(id){ return /^[1245]/.test(id); });
 }
 
 function buildMkMap(events) {
@@ -1409,7 +1394,6 @@ function runComparison(eligible, primaryMap) {
     var descKey  = normaliseDescForCompare(arRecord.description);
     var mkRecord = null;
 
-    /* Check matching on all three primary keys strictly */
     arOid.split(',').forEach(function(oid) {
       if (mkRecord) return;
       oid = oid.trim();
@@ -1562,33 +1546,50 @@ function backToDashboard() {
 
 function setValFilter(f) {
   valFilter = f;
-  renderValidation();
+  renderValidationTableOnly();
+  updateValFilterButtons();
+}
+
+function updateValFilterButtons() {
+  var btns = document.querySelectorAll('.val-filter-btn');
+  btns.forEach(function(b) {
+    var onclickAttr = b.getAttribute('onclick') || '';
+    if (onclickAttr.indexOf("'" + valFilter + "'") !== -1) {
+      b.classList.add('active');
+    } else {
+      b.classList.remove('active');
+    }
+  });
 }
 
 function valSearch() {
-  valSearchQuery = (document.getElementById('valSearchInput').value || '').trim().toLowerCase();
-  renderValidation();
+  var el = document.getElementById('valSearchInput');
+  valSearchQuery = (el ? el.value : '').trim().toLowerCase();
+  
+  var clearBtn = document.getElementById('valSearchClearBtn');
+  var countBadge = document.getElementById('valSearchCountBadge');
+  if (clearBtn) clearBtn.style.display = valSearchQuery ? 'inline-block' : 'none';
+  
+  renderValidationTableOnly();
 }
 
 function clearValSearch() {
   valSearchQuery = '';
   var el = document.getElementById('valSearchInput');
   if (el) el.value = '';
-  renderValidation();
+  
+  var clearBtn = document.getElementById('valSearchClearBtn');
+  var countBadge = document.getElementById('valSearchCountBadge');
+  if (clearBtn) clearBtn.style.display = 'none';
+  if (countBadge) countBadge.textContent = '';
+  
+  renderValidationTableOnly();
 }
 
 /* ═══════════════════════════════════════════════
-   RENDER VALIDATION RESULTS
+   RENDER VALIDATION RESULTS & SEAMLESS TABLE-ONLY UPDATE
 ═══════════════════════════════════════════════ */
-function renderValidation() {
-  var container = document.getElementById('mainContent');
-
-  var matchCount  = validationResults.filter(function(r){ return r.status==='MATCH'; }).length;
-  var missCount   = validationResults.filter(function(r){ return r.status==='MISMATCH'; }).length;
-  var notFndCount = validationResults.filter(function(r){ return r.status==='NOT_FOUND'; }).length;
-  var totalCount  = validationResults.length;
-  var hasDch      = dchEnabled;
-
+function getFilteredValidationData() {
   var displayed = validationResults.filter(function(r) {
     if (valFilter === 'match')    return r.status === 'MATCH';
     if (valFilter === 'mismatch') return r.status === 'MISMATCH';
@@ -1613,6 +1614,8 @@ function renderValidation() {
         safeStr(r.arRecord.overrideId).toLowerCase().indexOf(q)      !== -1 ||
         safeStr(r.arRecord.oaId).toLowerCase().indexOf(q)            !== -1 ||
         safeStr(r.arRecord.rsid).toLowerCase().indexOf(q)            !== -1 ||
+        safeStr(r.arRecord.channelNum).toLowerCase().indexOf(q)      !== -1 ||
+        safeStr(r.arRecord.motionGraphics).toLowerCase().indexOf(q)  !== -1 ||
         safeStr(r.arRecord.description).toLowerCase().indexOf(q)     !== -1 ||
         safeStr(r.arRecord.competitionId).toLowerCase().indexOf(q)   !== -1 ||
         safeStr(r.arRecord.rightsId).toLowerCase().indexOf(q)        !== -1 ||
@@ -1628,6 +1631,165 @@ function renderValidation() {
       );
     });
   }
+
+  return displayed;
+}
+
+function buildValidationTableHtml(displayed) {
+  var hasDch = dchEnabled;
+  var totalCount = validationResults.length;
+
+  if (displayed.length === 0) {
+    return '<div class="empty-state"><div class="icon">🔍</div>' +
+      '<h3>No records match</h3>' +
+      '<p>' + (valSearchQuery ? 'No validation results match your search.' : 'No records match this filter.') + '</p>' +
+      '</div>';
+  }
+
+  var colSpan   = hasDch ? 7 : 6;
+  var theadHtml =
+    '<thead><tr>' +
+    '<th class="th-num" style="cursor:default;width:40px">#</th>' +
+    '<th class="th-region" style="cursor:default;width:90px">Region</th>' +
+    '<th class="th-status" style="cursor:default;width:130px">Status</th>' +
+    '<th class="th-oid" style="cursor:default;width:130px">Override ID</th>' +
+    '<th style="cursor:default;width:140px;color:#aaa">Field</th>' +
+    '<th class="th-ar"  style="cursor:default;min-width:240px"><span class="src-ar">ALL REGIONS</span></th>' +
+    '<th class="th-dcg" style="cursor:default;min-width:240px"><span class="src-dcg">MK-EAE DCG</span></th>' +
+    (hasDch ? '<th class="th-dch" style="cursor:default;min-width:240px"><span class="src-dch">MK-EAE DCH</span></th>' : '') +
+    '</tr></thead>';
+
+  var tbodyHtml = '';
+
+  displayed.forEach(function(r, idx) {
+    var rowClass =
+      r.status === 'MATCH'    ? 'vrow-match'    :
+      r.status === 'MISMATCH' ? 'vrow-miss'     :
+                                'vrow-notfound';
+
+    var statusBadge =
+      r.status === 'MATCH'    ? '<span class="val-status-match" title="All parameters match">✅ MATCH</span>' :
+      r.status === 'MISMATCH' ? '<span class="val-status-miss" title="One or more fields differ">❌ MISMATCH</span>' :
+                                '<span class="val-status-notfound" title="Record not found in MK-EAE">⚠️ NOT FOUND</span>';
+
+    var oidDisplay    = safeStr(r.arRecord.overrideId);
+    var regionDisplay = '<span class="country-tag" style="font-size:10px">' + safeStr(r.arRecord._country) + '</span>';
+
+    var dcg = r.dcgResult;
+    var dch = r.dchResult;
+
+    COMPARE_FIELDS.forEach(function(f, fi) {
+      var isFirst = (fi === 0);
+      var arVal   = safeStr(r.arRecord[f.key]);
+
+      var dcgCellClass, dcgCellVal;
+      if (!dcg || dcg.status === 'NOT_FOUND') {
+        dcgCellClass = 'td-dcg-notfound';
+        dcgCellVal   = 'Not found in DCG';
+      } else if (dcg.fields && dcg.fields[f.key]) {
+        var dcgFr    = dcg.fields[f.key];
+        dcgCellClass = dcgFr.match ? 'td-dcg-match' : 'td-dcg-miss';
+        dcgCellVal   = safeStr(dcgFr.mkVal);
+      } else {
+        dcgCellClass = 'td-dcg-notfound';
+        dcgCellVal   = '—';
+      }
+
+      var dchCell = '';
+      if (hasDch) {
+        var dchCellClass, dchCellVal;
+        if (!dch || dch.status === 'NOT_FOUND') {
+          dchCellClass = 'td-dch-notfound';
+          dchCellVal   = 'Not found in DCH';
+        } else if (dch.fields && dch.fields[f.key]) {
+          var dchFr    = dch.fields[f.key];
+          dchCellClass = dchFr.match ? 'td-dch-match' : 'td-dch-miss';
+          dchCellVal   = safeStr(dchFr.mkVal);
+        } else {
+          dchCellClass = 'td-dch-notfound';
+          dchCellVal   = '—';
+        }
+        dchCell = '<td class="' + dchCellClass + '" title="' + dchCellVal + '">' + trunc(dchCellVal, 60) + '</td>';
+      }
+
+      var arCellClass;
+      if (r.status === 'NOT_FOUND') {
+        arCellClass = 'td-ar-notfound';
+      } else {
+        var dcgMiss = dcg && dcg.fields && dcg.fields[f.key] && !dcg.fields[f.key].match;
+        var dchMiss = hasDch && dch && dch.fields && dch.fields[f.key] && !dch.fields[f.key].match;
+        arCellClass = (dcgMiss || dchMiss) ? 'td-ar-miss' : 'td-ar-match';
+      }
+
+      var isPrimary = PRIMARY_MATCH_KEYS.indexOf(f.key) !== -1;
+      var fieldLabel = isPrimary ? ('<span style="color:#f8ff00">★</span> ' + f.label) : f.label;
+
+      if (isFirst) {
+        tbodyHtml +=
+          '<tr class="' + rowClass + '">' +
+          '<td class="td-fixed row-number" rowspan="' + COMPARE_FIELDS.length + '">' + (idx+1) + '</td>' +
+          '<td class="td-fixed" rowspan="' + COMPARE_FIELDS.length + '">' + regionDisplay + '</td>' +
+          '<td class="td-fixed" rowspan="' + COMPARE_FIELDS.length + '">' + statusBadge + '</td>' +
+          '<td class="td-fixed" rowspan="' + COMPARE_FIELDS.length + '" title="' + oidDisplay + '"><span class="override-cell">' + oidDisplay + '</span></td>' +
+          '<td class="td-fixed" style="color:#aaa;font-size:11px">' + fieldLabel + '</td>' +
+          '<td class="' + arCellClass  + '" title="' + arVal + '">' + trunc(arVal, 60) + '</td>' +
+          '<td class="' + dcgCellClass + '" title="' + dcgCellVal + '">' + trunc(dcgCellVal, 60) + '</td>' +
+          dchCell +
+          '</tr>';
+      } else {
+        tbodyHtml +=
+          '<tr class="' + rowClass + '">' +
+          '<td class="td-fixed" style="color:#aaa;font-size:11px">' + fieldLabel + '</td>' +
+          '<td class="' + arCellClass  + '" title="' + arVal + '">' + trunc(arVal, 60) + '</td>' +
+          '<td class="' + dcgCellClass + '" title="' + dcgCellVal + '">' + trunc(dcgCellVal, 60) + '</td>' +
+          dchCell +
+          '</tr>';
+      }
+    });
+
+    tbodyHtml +=
+      '<tr style="background:#000;height:6px">' +
+      '<td colspan="' + colSpan + '" style="padding:0;border-bottom:2px solid #2a2a2a"></td>' +
+      '</tr>';
+  });
+
+  return '<div class="table-wrapper">' +
+    '<div class="table-header-bar">' +
+    '<h3>🔍 Validation Results</h3>' +
+    '<div style="display:flex;align-items:center;gap:12px">' +
+    '<span><span class="src-ar">ALL REGIONS</span> vs <span class="src-dcg">DCG</span>' +
+    (hasDch ? ' vs <span class="src-dch">DCH</span>' : '') + '</span>' +
+    '<span style="color:#888">Showing ' + displayed.length + ' of ' + totalCount + ' records</span>' +
+    '<span style="font-size:10px;color:#f8ff00">★ = Primary matching keys</span>' +
+    '</div></div>' +
+    '<div class="table-scroll"><table class="val-table">' +
+    theadHtml + '<tbody>' + tbodyHtml + '</tbody>' +
+    '</table></div></div>';
+}
+
+function renderValidationTableOnly() {
+  var tableContainer = document.getElementById('valTableContainer');
+  if (!tableContainer) { renderValidation(); return; }
+  
+  var displayed = getFilteredValidationData();
+  tableContainer.innerHTML = buildValidationTableHtml(displayed);
+  
+  var countBadge = document.getElementById('valSearchCountBadge');
+  if (countBadge) {
+    countBadge.textContent = valSearchQuery ? ('Showing ' + displayed.length + ' results') : '';
+  }
+}
+
+function renderValidation() {
+  var container = document.getElementById('mainContent');
+
+  var matchCount  = validationResults.filter(function(r){ return r.status==='MATCH'; }).length;
+  var missCount   = validationResults.filter(function(r){ return r.status==='MISMATCH'; }).length;
+  var notFndCount = validationResults.filter(function(r){ return r.status==='NOT_FOUND'; }).length;
+  var totalCount  = validationResults.length;
+  var hasDch      = dchEnabled;
+
+  var displayed = getFilteredValidationData();
 
   var alertHtml = '';
   if (missCount > 0) {
@@ -1669,11 +1831,11 @@ function renderValidation() {
     '<div class="val-search-bar">' +
     '<span class="val-search-label">🔎 Search Results:</span>' +
     '<input type="text" class="val-search-box" id="valSearchInput"' +
-    ' placeholder="Search Override ID, OA ID, RSID, Description, MFL ID, Audio..."' +
+    ' placeholder="Search Override ID, OA ID, RSID, Channel Num, Desc..."' +
     ' value="' + valSearchQuery + '"' +
     ' oninput="valSearch()"/>' +
-    (valSearchQuery ? '<button class="val-search-clear" onclick="clearValSearch()">✕ Clear</button>' : '') +
-    (valSearchQuery ? '<span style="font-size:11px;color:#888">Showing ' + displayed.length + ' results</span>' : '') +
+    '<button class="val-search-clear" id="valSearchClearBtn" onclick="clearValSearch()" style="display:' + (valSearchQuery ? 'inline-block' : 'none') + '">✕ Clear</button>' +
+    '<span id="valSearchCountBadge" style="font-size:11px;color:#888">' + (valSearchQuery ? 'Showing ' + displayed.length + ' results' : '') + '</span>' +
     '</div>';
 
   var filterHtml =
@@ -1685,134 +1847,7 @@ function renderValidation() {
     '<button class="val-filter-btn f-notfound' + (valFilter==='notfound'? ' active':'') + '" onclick="setValFilter(\'notfound\')">⚠️ Not Found (' + notFndCount + ')</button>' +
     '</div>';
 
-  var tableHtml = '';
-  if (displayed.length === 0) {
-    tableHtml = '<div class="empty-state"><div class="icon">🔍</div>' +
-      '<h3>No records match</h3>' +
-      '<p>' + (valSearchQuery ? 'No validation results match your search.' : 'No records match this filter.') + '</p>' +
-      '</div>';
-  } else {
-    var colSpan   = hasDch ? 7 : 6;
-    var theadHtml =
-      '<thead><tr>' +
-      '<th class="th-num" style="cursor:default;width:40px">#</th>' +
-      '<th class="th-region" style="cursor:default;width:90px">Region</th>' +
-      '<th class="th-status" style="cursor:default;width:130px">Status</th>' +
-      '<th class="th-oid" style="cursor:default;width:130px">Override ID</th>' +
-      '<th style="cursor:default;width:140px;color:#aaa">Field</th>' +
-      '<th class="th-ar"  style="cursor:default;min-width:240px"><span class="src-ar">ALL REGIONS</span></th>' +
-      '<th class="th-dcg" style="cursor:default;min-width:240px"><span class="src-dcg">MK-EAE DCG</span></th>' +
-      (hasDch ? '<th class="th-dch" style="cursor:default;min-width:240px"><span class="src-dch">MK-EAE DCH</span></th>' : '') +
-      '</tr></thead>';
-
-    var tbodyHtml = '';
-
-    displayed.forEach(function(r, idx) {
-      var rowClass =
-        r.status === 'MATCH'    ? 'vrow-match'    :
-        r.status === 'MISMATCH' ? 'vrow-miss'     :
-                                  'vrow-notfound';
-
-      var statusBadge =
-        r.status === 'MATCH'    ? '<span class="val-status-match" title="All parameters match">✅ MATCH</span>' :
-        r.status === 'MISMATCH' ? '<span class="val-status-miss" title="One or more fields differ">❌ MISMATCH</span>' :
-                                  '<span class="val-status-notfound" title="Record not found in MK-EAE">⚠️ NOT FOUND</span>';
-
-      var oidDisplay    = safeStr(r.arRecord.overrideId);
-      var regionDisplay = '<span class="country-tag" style="font-size:10px">' + safeStr(r.arRecord._country) + '</span>';
-
-      var dcg = r.dcgResult;
-      var dch = r.dchResult;
-
-      COMPARE_FIELDS.forEach(function(f, fi) {
-        var isFirst = (fi === 0);
-        var arVal   = safeStr(r.arRecord[f.key]);
-
-        var dcgCellClass, dcgCellVal;
-        if (!dcg || dcg.status === 'NOT_FOUND') {
-          dcgCellClass = 'td-dcg-notfound';
-          dcgCellVal   = 'Not found in DCG';
-        } else if (dcg.fields && dcg.fields[f.key]) {
-          var dcgFr    = dcg.fields[f.key];
-          dcgCellClass = dcgFr.match ? 'td-dcg-match' : 'td-dcg-miss';
-          dcgCellVal   = safeStr(dcgFr.mkVal);
-        } else {
-          dcgCellClass = 'td-dcg-notfound';
-          dcgCellVal   = '—';
-        }
-
-        var dchCell = '';
-        if (hasDch) {
-          var dchCellClass, dchCellVal;
-          if (!dch || dch.status === 'NOT_FOUND') {
-            dchCellClass = 'td-dch-notfound';
-            dchCellVal   = 'Not found in DCH';
-          } else if (dch.fields && dch.fields[f.key]) {
-            var dchFr    = dch.fields[f.key];
-            dchCellClass = dchFr.match ? 'td-dch-match' : 'td-dch-miss';
-            dchCellVal   = safeStr(dchFr.mkVal);
-          } else {
-            dchCellClass = 'td-dch-notfound';
-            dchCellVal   = '—';
-          }
-          dchCell = '<td class="' + dchCellClass + '" title="' + dchCellVal + '">' + trunc(dchCellVal, 60) + '</td>';
-        }
-
-        var arCellClass;
-        if (r.status === 'NOT_FOUND') {
-          arCellClass = 'td-ar-notfound';
-        } else {
-          var dcgMiss = dcg && dcg.fields && dcg.fields[f.key] && !dcg.fields[f.key].match;
-          var dchMiss = hasDch && dch && dch.fields && dch.fields[f.key] && !dch.fields[f.key].match;
-          arCellClass = (dcgMiss || dchMiss) ? 'td-ar-miss' : 'td-ar-match';
-        }
-
-        var isPrimary = PRIMARY_MATCH_KEYS.indexOf(f.key) !== -1;
-        var fieldLabel = isPrimary ? ('<span style="color:#f8ff00">★</span> ' + f.label) : f.label;
-
-        if (isFirst) {
-          tbodyHtml +=
-            '<tr class="' + rowClass + '">' +
-            '<td class="td-fixed row-number" rowspan="' + COMPARE_FIELDS.length + '">' + (idx+1) + '</td>' +
-            '<td class="td-fixed" rowspan="' + COMPARE_FIELDS.length + '">' + regionDisplay + '</td>' +
-            '<td class="td-fixed" rowspan="' + COMPARE_FIELDS.length + '">' + statusBadge + '</td>' +
-            '<td class="td-fixed" rowspan="' + COMPARE_FIELDS.length + '" title="' + oidDisplay + '"><span class="override-cell">' + oidDisplay + '</span></td>' +
-            '<td class="td-fixed" style="color:#aaa;font-size:11px">' + fieldLabel + '</td>' +
-            '<td class="' + arCellClass  + '" title="' + arVal + '">' + trunc(arVal, 60) + '</td>' +
-            '<td class="' + dcgCellClass + '" title="' + dcgCellVal + '">' + trunc(dcgCellVal, 60) + '</td>' +
-            dchCell +
-            '</tr>';
-        } else {
-          tbodyHtml +=
-            '<tr class="' + rowClass + '">' +
-            '<td class="td-fixed" style="color:#aaa;font-size:11px">' + fieldLabel + '</td>' +
-            '<td class="' + arCellClass  + '" title="' + arVal + '">' + trunc(arVal, 60) + '</td>' +
-            '<td class="' + dcgCellClass + '" title="' + dcgCellVal + '">' + trunc(dcgCellVal, 60) + '</td>' +
-            dchCell +
-            '</tr>';
-        }
-      });
-
-      tbodyHtml +=
-        '<tr style="background:#000;height:6px">' +
-        '<td colspan="' + colSpan + '" style="padding:0;border-bottom:2px solid #2a2a2a"></td>' +
-        '</tr>';
-    });
-
-    tableHtml =
-      '<div class="table-wrapper">' +
-      '<div class="table-header-bar">' +
-      '<h3>🔍 Validation Results</h3>' +
-      '<div style="display:flex;align-items:center;gap:12px">' +
-      '<span><span class="src-ar">ALL REGIONS</span> vs <span class="src-dcg">DCG</span>' +
-      (hasDch ? ' vs <span class="src-dch">DCH</span>' : '') + '</span>' +
-      '<span style="color:#888">Showing ' + displayed.length + ' of ' + totalCount + ' records</span>' +
-      '<span style="font-size:10px;color:#f8ff00">★ = Primary matching keys</span>' +
-      '</div></div>' +
-      '<div class="table-scroll"><table class="val-table">' +
-      theadHtml + '<tbody>' + tbodyHtml + '</tbody>' +
-      '</table></div></div>';
-  }
+  var tableHtml = '<div id="valTableContainer">' + buildValidationTableHtml(displayed) + '</div>';
 
   container.innerHTML = headerHtml + alertHtml + summaryHtml + searchBarHtml + filterHtml + tableHtml;
 }
@@ -1935,14 +1970,10 @@ function getCurrentFilteredDataset() {
       });
     });
 
-    var nonCentral = regionResults.filter(function(r) { return r.country !== 'Central'; });
-    var central    = regionResults.find(function(r) { return r.country === 'Central'; });
-
-    var withData    = nonCentral.filter(function(r) { return r.filteredData.length > 0; });
-    var withoutData = nonCentral.filter(function(r) { return r.filteredData.length === 0; });
+    var withData    = regionResults.filter(function(r) { return r.filteredData.length > 0; });
+    var withoutData = regionResults.filter(function(r) { return r.filteredData.length === 0; });
 
     var ordered = withData.concat(withoutData);
-    if (central) ordered.push(central);
 
     ordered.forEach(function(item) {
       item.filteredData.forEach(function(s) {
@@ -2074,6 +2105,8 @@ function buildRows(pageData, startIndex, showCountry) {
     var oid  = safeStr(s.overrideId);
     var oaid = safeStr(s.oaId);
     var rsid = safeStr(s.rsid);
+    var chNum= safeStr(s.channelNum);
+    var mgfx = safeStr(s.motionGraphics);
     var mflId= safeStr(s.mflId);
     var cc   = safeStr(s.closedCaptions);
     var ccc  = safeStr(s.ccConfig);
@@ -2106,6 +2139,8 @@ function buildRows(pageData, startIndex, showCountry) {
     var ccHtml   = (cc !== '—') ? '<span class="badge badge-gray" title="' + cc + '">' + cc + '</span>' : '<span style="color:#555">None</span>';
     var cccHtml  = (ccc !== '—' && ccc !== 'none') ? '<span class="id-full" title="' + ccc + '">' + ccc + '</span>' : '<span style="color:#555">none</span>';
     var rsidHtml = (rsid !== '—') ? '<span class="id-full" title="' + rsid + '">' + rsid + '</span>' : '<span style="color:#555">—</span>';
+    var chNumHtml= (chNum !== '—' && chNum !== 'None') ? '<span class="id-full" title="' + chNum + '">' + chNum + '</span>' : '<span style="color:#555">None</span>';
+    var mgfxHtml = (mgfx !== '—') ? '<span class="id-full" title="' + mgfx + '">' + mgfx + '</span>' : '<span style="color:#555">—</span>';
     var mflHtml  = (mflId !== '—') ? '<span class="id-full" title="' + mflId + '">' + mflId + '</span>' : '<span style="color:#555">—</span>';
     var mtaHtml  = (mta  !== '—') ? '<div class="mta-cell" title="' + mta + '">' + mta + '</div>' : '<span style="color:#555">—</span>';
     var oidHtml  = (oid  !== '—') ? '<span class="override-cell" title="' + oid + '">' + oid  + '</span>' : '<span style="color:#555">—</span>';
@@ -2133,6 +2168,8 @@ function buildRows(pageData, startIndex, showCountry) {
       overrideId      : '<td title="' + oid + '">' + oidHtml  + '</td>',
       oaId            : '<td title="' + oaid + '">' + oaidHtml + '</td>',
       rsid            : '<td title="' + rsid + '">' + rsidHtml + '</td>',
+      channelNum      : '<td title="' + chNum + '">' + chNumHtml + '</td>',
+      motionGraphics  : '<td title="' + mgfx + '">' + mgfxHtml + '</td>',
       mflId           : '<td title="' + mflId + '">' + mflHtml  + '</td>',
       closedCaptions  : '<td title="' + cc + '">' + ccHtml   + '</td>',
       ccConfig        : '<td title="' + ccc + '">' + cccHtml  + '</td>',
@@ -2230,7 +2267,7 @@ function renderTable() {
 
 /* ═══════════════════════════════════════════════
    RENDER ALL REGIONS
-   (Matching regions FIRST, empty at bottom, Central ALWAYS LAST)
+   (Matching regions FIRST, empty at bottom)
 ═══════════════════════════════════════════════ */
 function renderAllRegions() {
   var container  = document.getElementById('mainContent');
@@ -2254,16 +2291,10 @@ function renderAllRegions() {
     });
   });
 
-  var nonCentralResults = regionResults.filter(function(r) { return r.country !== 'Central'; });
-  var centralResult     = regionResults.find(function(r) { return r.country === 'Central'; });
-
-  var withData    = nonCentralResults.filter(function(r) { return r.filteredData.length > 0; });
-  var withoutData = nonCentralResults.filter(function(r) { return r.filteredData.length === 0; });
+  var withData    = regionResults.filter(function(r) { return r.filteredData.length > 0; });
+  var withoutData = regionResults.filter(function(r) { return r.filteredData.length === 0; });
 
   var orderedRegions = withData.concat(withoutData);
-  if (centralResult) {
-    orderedRegions.push(centralResult);
-  }
 
   var html = '';
   orderedRegions.forEach(function(item) {
