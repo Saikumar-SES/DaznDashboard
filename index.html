@@ -32,6 +32,9 @@ body{font-family:'Segoe UI',sans-serif;background:#0a0a0a;color:#fff;min-height:
 .country-btn.active{background:#f8ff00;color:#000;border-color:#f8ff00;box-shadow:0 0 10px rgba(248,255,0,0.4)}
 .country-btn.all-btn{background:#222;border:2px solid #f8ff00;color:#f8ff00;font-weight:800;padding:7px 20px}
 .country-btn.all-btn.active{background:#f8ff00;color:#000}
+.country-btn.ses-btn{background:#001a3d;border:2px solid #00aaff;color:#00aaff;font-weight:800;padding:7px 20px}
+.country-btn.ses-btn:hover{background:#002a5a;border-color:#00ccff;color:#00ccff}
+.country-btn.ses-btn.active{background:#00aaff;color:#000;border-color:#00aaff;box-shadow:0 0 10px rgba(0,170,255,0.4)}
 .selected-country-badge{display:flex;align-items:center;gap:6px;background:#1a1a00;border:1px solid #f8ff00;border-radius:8px;padding:6px 14px;font-size:13px;color:#f8ff00;font-weight:700;white-space:nowrap}
 
 /* ── CONTROLS ── */
@@ -190,9 +193,7 @@ tbody td{padding:10px 14px;color:#ddd;vertical-align:middle;white-space:nowrap;o
 .welcome-countries{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:20px}
 .welcome-country-pill{padding:5px 14px;background:#1a1a1a;border:1px solid #333;border-radius:16px;font-size:12px;color:#888}
 
-/* ══════════════════════════════════════════
-   MK-EAE VALIDATION STYLES
-═══════════════════════════════════════════ */
+/* ── VALIDATION STYLES ── */
 .mismatch-alert{background:#3d0000;border:2px solid #ff4444;border-radius:10px;padding:14px 20px;margin-bottom:18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;animation:fadeIn 0.3s ease}
 .mismatch-alert .alert-icon{font-size:22px}
 .mismatch-alert .alert-title{color:#ff4444;font-weight:700;font-size:14px}
@@ -201,7 +202,6 @@ tbody td{padding:10px 14px;color:#ddd;vertical-align:middle;white-space:nowrap;o
 .match-alert .alert-icon{font-size:22px}
 .match-alert .alert-title{color:#00cc66;font-weight:700;font-size:14px}
 .match-alert .alert-sub{color:#aaffcc;font-size:12px;margin-top:3px}
-
 .val-summary{background:#111;border:1px solid #2a2a2a;border-radius:10px;padding:14px 20px;margin-bottom:18px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;animation:fadeIn 0.3s ease}
 .val-stat{text-align:center;min-width:70px}
 .val-stat-value{font-size:22px;font-weight:900}
@@ -210,11 +210,9 @@ tbody td{padding:10px 14px;color:#ddd;vertical-align:middle;white-space:nowrap;o
 .val-match{color:#00cc66}
 .val-miss{color:#ff4444}
 .val-notfound{color:#ff9944}
-
 .val-header{background:linear-gradient(135deg,#001a3d,#003366);border:1px solid #00aaff;border-radius:10px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;animation:fadeIn 0.3s ease}
 .val-header-title{color:#00aaff;font-size:16px;font-weight:700}
 .val-header-sub{color:#aaccff;font-size:12px;margin-top:3px}
-
 .val-search-bar{background:#111;border:1px solid #2a2a2a;border-radius:8px;padding:10px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .val-search-box{padding:9px 14px;background:#1e1e1e;border:1px solid #333;border-radius:6px;color:#fff;font-size:13px;width:320px;outline:none;transition:border-color 0.2s}
 .val-search-box:focus{border-color:#00aaff}
@@ -222,26 +220,21 @@ tbody td{padding:10px 14px;color:#ddd;vertical-align:middle;white-space:nowrap;o
 .val-search-label{font-size:12px;color:#00aaff;font-weight:600;white-space:nowrap}
 .val-search-clear{padding:7px 14px;background:#2a2a2a;color:#aaa;border:1px solid #444;border-radius:6px;font-size:12px;cursor:pointer;transition:all 0.2s}
 .val-search-clear:hover{background:#3a3a3a;color:#fff}
-
 .val-filter-bar{background:#111;border:1px solid #2a2a2a;border-radius:8px;padding:10px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .val-filter-btn{padding:5px 14px;border-radius:16px;font-size:12px;font-weight:600;border:1px solid #444;background:#1a1a1a;color:#888;cursor:pointer;transition:all 0.2s}
 .val-filter-btn:hover{border-color:#f8ff00;color:#f8ff00}
 .val-filter-btn.active{background:#f8ff00;color:#000;border-color:#f8ff00}
 .val-filter-btn.f-match{border-color:#00cc66;color:#00cc66;background:#001a0d}
-.val-filter-btn.f-match.active{background:#00cc66;color:#000;border-color:#00cc66}
+.val-filter-btn.f-match.active{background:#00cc66;color:#00cc66}
 .val-filter-btn.f-miss{border-color:#ff4444;color:#ff4444;background:#1a0000}
 .val-filter-btn.f-miss.active{background:#ff4444;color:#fff;border-color:#ff4444}
 .val-filter-btn.f-notfound{border-color:#ff9944;color:#ff9944;background:#1a0d00}
 .val-filter-btn.f-notfound.active{background:#ff9944;color:#000;border-color:#ff9944}
-
-/* DCH checkbox */
 .dch-toggle{display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0d1a2a;border:1px solid #00aaff;border-radius:8px;cursor:pointer;font-size:13px;color:#00aaff;font-weight:600;transition:all 0.2s;user-select:none}
 .dch-toggle:hover{background:#1a2a3d}
 .dch-toggle input[type=checkbox]{accent-color:#00aaff;width:15px;height:15px;cursor:pointer}
 .dch-badge{display:inline-block;background:#1a0033;color:#cc88ff;border:1px solid #cc88ff;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;margin-left:4px}
 .dcg-badge{display:inline-block;background:#001a3d;color:#00aaff;border:1px solid #00aaff;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;margin-left:4px}
-
-/* ── VALIDATION TABLE ── */
 .val-table{width:100%;border-collapse:collapse;font-size:12px;table-layout:auto}
 .val-table thead tr{background:#1e1e1e}
 .val-table thead th{padding:10px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#f8ff00;border-bottom:2px solid #f8ff00;white-space:nowrap}
@@ -259,30 +252,33 @@ tbody td{padding:10px 14px;color:#ddd;vertical-align:middle;white-space:nowrap;o
 .val-table tbody tr.vrow-notfound td.td-fixed{background:#1a0d00}
 .val-table td{padding:8px 12px;vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:320px}
 .val-table td.td-fixed{background:#0d0d0d}
-
-/* AR cells */
 .val-table td.td-ar-match   {background:#003d1a;color:#00cc66;border-left:3px solid #00cc66;font-family:'Courier New',monospace;font-size:11px}
 .val-table td.td-ar-miss    {background:#3d0000;color:#ff4444;border-left:3px solid #ff4444;font-family:'Courier New',monospace;font-size:11px}
 .val-table td.td-ar-notfound{background:#1a0d00;color:#ff9944;border-left:3px solid #ff9944;font-family:'Courier New',monospace;font-size:11px}
-
-/* DCG cells */
 .val-table td.td-dcg-match   {background:#002a12;color:#00cc66;font-family:'Courier New',monospace;font-size:11px}
 .val-table td.td-dcg-miss    {background:#2a0000;color:#ff4444;font-family:'Courier New',monospace;font-size:11px}
 .val-table td.td-dcg-notfound{background:#140a00;color:#ff9944;font-family:'Courier New',monospace;font-size:11px;font-style:italic}
-
-/* DCH cells */
 .val-table td.td-dch-match   {background:#1a0033;color:#00cc66;border-right:3px solid #00cc66;font-family:'Courier New',monospace;font-size:11px}
 .val-table td.td-dch-miss    {background:#2a0020;color:#ff4444;border-right:3px solid #ff4444;font-family:'Courier New',monospace;font-size:11px}
 .val-table td.td-dch-notfound{background:#140a00;color:#ff9944;border-right:3px solid #ff9944;font-family:'Courier New',monospace;font-size:11px;font-style:italic}
-
-/* status badges */
 .val-status-match   {background:#003d1a;color:#00cc66;border:1px solid #00cc66;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:700;white-space:nowrap}
 .val-status-miss    {background:#3d0000;color:#ff4444;border:1px solid #ff4444;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:700;white-space:nowrap}
 .val-status-notfound{background:#2a1500;color:#ff9944;border:1px solid #ff9944;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:700;white-space:nowrap}
-
 .src-ar {display:inline-block;background:#001a3d;color:#00aaff;border:1px solid #00aaff;padding:1px 7px;border-radius:8px;font-size:9px;font-weight:700}
 .src-dcg{display:inline-block;background:#001a3d;color:#00aaff;border:1px solid #00aaff;padding:1px 7px;border-radius:8px;font-size:9px;font-weight:700}
 .src-dch{display:inline-block;background:#1a0033;color:#cc88ff;border:1px solid #cc88ff;padding:1px 7px;border-radius:8px;font-size:9px;font-weight:700}
+
+/* ── SES - POV INTERFACE STYLES ── */
+.ses-panel{background:#111;border:1px solid #2a2a2a;border-radius:12px;padding:22px;margin-bottom:24px;box-shadow:0 8px 32px rgba(0,0,0,0.5)}
+.ses-top-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px}
+.ses-top-left{display:flex;align-items:center;gap:10px}
+.ses-top-right{display:flex;align-items:center;gap:12px}
+.ses-type-toggle{display:flex;align-items:center;gap:14px;background:#1a1a1a;padding:8px 16px;border-radius:8px;border:1px solid #333}
+.ses-radio-label{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#ccc;cursor:pointer;user-select:none}
+.ses-radio-label input[type=radio]{accent-color:#00aaff;width:15px;height:15px;cursor:pointer}
+.ses-textarea{width:100%;height:150px;background:#181818;border:1px solid #333;border-radius:8px;color:#fff;font-family:'Courier New',monospace;font-size:12px;padding:14px;outline:none;transition:border-color 0.2s;resize:vertical;line-height:1.5}
+.ses-textarea:focus{border-color:#00aaff;box-shadow:0 0 10px rgba(0,170,255,0.2)}
+.ses-controls{display:flex;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap}
 
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
@@ -294,6 +290,7 @@ tbody td{padding:10px 14px;color:#ddd;vertical-align:middle;white-space:nowrap;o
   .country-bar{padding:12px 15px}
   .stream-indicators{justify-content:center}
   .filter-bar{padding:10px 15px}
+  .ses-top-bar{flex-direction:column;align-items:stretch}
 }
 </style>
 </head>
@@ -369,8 +366,7 @@ tbody td{padding:10px 14px;color:#ddd;vertical-align:middle;white-space:nowrap;o
 </div>
 
 <!-- ═══ CONTROLS ═══ -->
-<div class="controls">
-  <!-- Column Selector Dropdown -->
+<div class="controls" id="dashboardControls">
   <div class="col-selector-container">
     <button class="col-selector-btn" id="colToggleBtn" onclick="toggleColumnMenu()">
       ⚙️ Select Columns (<span id="selectedColCount">24</span>) ▾
@@ -399,7 +395,7 @@ tbody td{padding:10px 14px;color:#ddd;vertical-align:middle;white-space:nowrap;o
   </label>
 
   <input type="text" class="search-box" id="searchInput"
-         placeholder="Search OAID, MFL ID, Desc, Override ID, RSID..."
+         placeholder="Search OAID, MFL ID, Desc, Override ID, RSID, Channel Num..."
          oninput="filterTable()"/>
   <label class="auto-refresh-label">
     <input type="checkbox" id="autoRefresh" onchange="toggleAutoRefresh()"/> Auto Refresh
@@ -443,7 +439,7 @@ tbody td{padding:10px 14px;color:#ddd;vertical-align:middle;white-space:nowrap;o
     <div class="icon">📡</div>
     <h3>Select a Region to Get Started</h3>
     <p>Choose a country/region from the bar above or click
-       <strong style="color:#f8ff00">All Regions</strong> to load all streams.</p>
+       <strong style="color:#f8ff00">All Regions</strong> or <strong style="color:#00aaff">SES - POV</strong>.</p>
     <div class="welcome-countries" id="welcomeCountries"></div>
   </div>
 </div>
@@ -451,6 +447,7 @@ tbody td{padding:10px 14px;color:#ddd;vertical-align:middle;white-space:nowrap;o
 <script>
 /* ═══════════════════════════════════════════════
    CONFIGURATION & CONSTANTS
+   (Central replaced with MENA, 24 headers configured)
 ═══════════════════════════════════════════════ */
 var API_BASE      = '/api/streams';
 var API_ALL       = '/api/streams/all';
@@ -460,7 +457,8 @@ var API_MKEAE_DCH = '/api/mkeae/dch';
 var COUNTRIES = [
   'Japan','DACH','Canada','US',
   'Italy','Spain','Brazil','ROW',
-  'Belgium','France','Portugal','Taiwan'
+  'Belgium','France','Portugal','Taiwan',
+  'MENA'
 ];
 
 var ALL_AVAILABLE_COLUMNS = [
@@ -503,6 +501,7 @@ var sortCol               = 'streamStartTime';
 var sortDir               = 'asc';
 var selectedCountry       = null;
 var isAllMode             = false;
+var isSesPovMode          = false;
 var isValidationMode      = false;
 var validationResults     = [];
 var valFilter             = 'all';
@@ -510,9 +509,16 @@ var valSearchQuery        = '';
 var dchEnabled            = false;
 var activeIndicatorFilter = null;
 
-/* Selection order is preserved here */
 var selectedColumns       = ALL_AVAILABLE_COLUMNS.map(function(c) { return c.id; });
+var sesSelectedColumns    = ALL_AVAILABLE_COLUMNS.map(function(c) { return c.id; });
 var columnWidths          = {};
+
+/* SES - POV State */
+var sesInputFormat        = 'oid_mfl';
+var sesResultsData        = [];
+var sesCachedInputText    = '';
+var sesSortCol            = null;
+var sesSortDir            = 'asc';
 
 /* Combined Filter State */
 var filterState = {
@@ -577,6 +583,14 @@ function epochToIso(val) {
     welcome.appendChild(pill);
   });
 
+  /* SES - POV Button */
+  var sesBtn       = document.createElement('button');
+  sesBtn.className = 'country-btn ses-btn';
+  sesBtn.id        = 'cbtn-SES';
+  sesBtn.textContent = '📡 SES - POV';
+  sesBtn.onclick   = function() { selectSesPovMode(); };
+  grid.appendChild(sesBtn);
+
   buildColumnSelectorMenu();
 
   /* Enter key triggers fetch/apply globally across dashboard controls */
@@ -584,7 +598,17 @@ function epochToIso(val) {
     if (e.key === 'Enter') {
       var activeEl = document.activeElement;
       if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'SELECT')) {
-        if (!document.getElementById('fetchBtn').disabled) {
+        if (activeEl.id === 'valSearchInput') {
+          e.preventDefault();
+          valSearch();
+          return;
+        }
+        if (isValidationMode) {
+          return;
+        }
+        if (isSesPovMode) {
+          fetchSesPovData();
+        } else if (!document.getElementById('fetchBtn').disabled) {
           fetchData();
         } else {
           filterTable();
@@ -596,7 +620,6 @@ function epochToIso(val) {
 
 /* ═══════════════════════════════════════════════
    COLUMN SELECTOR UI & LOGIC
-   (Preserves chronological selection order)
 ═══════════════════════════════════════════════ */
 function buildColumnSelectorMenu() {
   var container = document.getElementById('colCheckboxesList');
@@ -630,10 +653,18 @@ function toggleColumnMenu() {
 }
 
 document.addEventListener('click', function(e) {
-  var container = document.querySelector('.col-selector-container');
-  if (container && !container.contains(e.target)) {
-    var menu = document.getElementById('colDropdownMenu');
-    if (menu) menu.classList.remove('show');
+  var dashControls = document.getElementById('dashboardControls');
+  if (dashControls) {
+    var container = dashControls.querySelector('.col-selector-container');
+    if (container && !container.contains(e.target)) {
+      var menu = document.getElementById('colDropdownMenu');
+      if (menu) menu.classList.remove('show');
+    }
+  }
+  var sesContainer = document.querySelector('.ses-col-container');
+  if (sesContainer && !sesContainer.contains(e.target)) {
+    var sesMenu = document.getElementById('sesColDropdownMenu');
+    if (sesMenu) sesMenu.classList.remove('show');
   }
 });
 
@@ -672,6 +703,7 @@ function updateColCountBadge() {
 
 function refreshCurrentTableView() {
   if (isValidationMode) return;
+  if (isSesPovMode) { renderSesPovResults(); return; }
   if (isAllMode) { renderAllRegions(); }
   else if (allData.length) { renderTable(); }
 }
@@ -681,7 +713,7 @@ function onDchToggle() {
 }
 
 /* ═══════════════════════════════════════════════
-   FILTER HELPER (Evaluates record against active filters)
+   FILTER HELPER
 ═══════════════════════════════════════════════ */
 function evaluateRecordFilters(s, q) {
   if (q) {
@@ -754,7 +786,7 @@ function evaluateRecordFilters(s, q) {
 }
 
 /* ═══════════════════════════════════════════════
-   COMBINED FILTER HANDLER (Apply Filter button ONLY)
+   COMBINED FILTER HANDLER
 ═══════════════════════════════════════════════ */
 function applyCombinedFilters() {
   var sd   = document.getElementById('fStartDate').value;
@@ -834,9 +866,6 @@ function updateAllPillStyles() {
   });
 }
 
-/* ═══════════════════════════════════════════════
-   APPLY ALL FILTERS (Single Region)
-═══════════════════════════════════════════════ */
 function applyAllFilters() {
   var q = (document.getElementById('searchInput').value || '').trim().toLowerCase();
   filteredData = allData.filter(function(s) {
@@ -851,12 +880,17 @@ function applyAllFilters() {
 ═══════════════════════════════════════════════ */
 function selectCountry(country) {
   isAllMode             = false;
+  isSesPovMode          = false;
   isValidationMode      = false;
   selectedCountry       = country;
   activeIndicatorFilter = null;
   updateAllPillStyles();
 
+  document.getElementById('filterBar').style.display          = 'flex';
+  document.getElementById('dashboardControls').style.display  = 'flex';
+
   document.getElementById('cbtn-ALL').className = 'country-btn all-btn';
+  document.getElementById('cbtn-SES').className = 'country-btn ses-btn';
   COUNTRIES.forEach(function(c) {
     var b = document.getElementById('cbtn-' + c);
     if (b) b.className = 'country-btn' + (c === country ? ' active' : '');
@@ -870,24 +904,29 @@ function selectCountry(country) {
   document.getElementById('backBtn').style.display          = 'none';
   document.getElementById('dchToggle').style.display        = 'none';
 
-  setStatus('','Region selected: ' + country + ' — Click Fetch Data to load streams');
+  setStatus('','Region selected: ' + country + ' — Click Fetch Data or press Enter');
   allData = []; filteredData = []; currentPage = 1;
   updateStats();
   document.getElementById('exportBtn').disabled = true;
   document.getElementById('mainContent').innerHTML =
     '<div class="empty-state"><div class="icon">🌍</div>' +
     '<h3>' + country + ' Region Selected</h3>' +
-    '<p>Click <strong style="color:#f8ff00">Fetch Data</strong> to load live streams.</p></div>';
+    '<p>Click <strong style="color:#f8ff00">Fetch Data</strong> or press <strong style="color:#f8ff00">Enter</strong> to load live streams.</p></div>';
 }
 
 function selectAllRegions() {
   isAllMode             = true;
+  isSesPovMode          = false;
   isValidationMode      = false;
   selectedCountry       = 'ALL';
   activeIndicatorFilter = null;
   updateAllPillStyles();
 
+  document.getElementById('filterBar').style.display          = 'flex';
+  document.getElementById('dashboardControls').style.display  = 'flex';
+
   document.getElementById('cbtn-ALL').className = 'country-btn all-btn active';
+  document.getElementById('cbtn-SES').className = 'country-btn ses-btn';
   COUNTRIES.forEach(function(c) {
     var b = document.getElementById('cbtn-' + c);
     if (b) b.className = 'country-btn';
@@ -901,19 +940,538 @@ function selectAllRegions() {
   document.getElementById('backBtn').style.display          = 'none';
   document.getElementById('dchToggle').style.display        = 'none';
 
-  setStatus('','All Regions selected — Click Fetch Data');
+  setStatus('','All Regions selected — Click Fetch Data or press Enter');
   allData = []; filteredData = []; currentPage = 1;
   updateStats();
   document.getElementById('exportBtn').disabled = true;
   document.getElementById('mainContent').innerHTML =
     '<div class="empty-state"><div class="icon">🌐</div>' +
     '<h3>All Regions Selected</h3>' +
-    '<p>Click <strong style="color:#f8ff00">Fetch Data</strong> to load all ' +
+    '<p>Click <strong style="color:#f8ff00">Fetch Data</strong> or press <strong style="color:#f8ff00">Enter</strong> to load all ' +
     COUNTRIES.length + ' regions.</p></div>';
 }
 
 /* ═══════════════════════════════════════════════
-   FETCH DATA
+   SES - POV TOP-LEVEL FEATURE (Independent)
+═══════════════════════════════════════════════ */
+function selectSesPovMode() {
+  isSesPovMode     = true;
+  isAllMode        = false;
+  isValidationMode = false;
+  selectedCountry  = 'SES';
+
+  document.getElementById('cbtn-ALL').className = 'country-btn all-btn';
+  COUNTRIES.forEach(function(c) {
+    var b = document.getElementById('cbtn-' + c);
+    if (b) b.className = 'country-btn';
+  });
+  document.getElementById('cbtn-SES').className = 'country-btn ses-btn active';
+
+  document.getElementById('selectedBadge').style.display   = 'flex';
+  document.getElementById('selectedBadgeText').textContent = 'SES - POV';
+
+  document.getElementById('filterBar').style.display         = 'none';
+  document.getElementById('dashboardControls').style.display = 'none';
+
+  setStatus('success', 'SES - POV Mode active — Paste input and click Fetch Data');
+  renderSesPovInterface();
+}
+
+function setSesInputFormat(fmt) {
+  sesInputFormat = fmt;
+  var ta = document.getElementById('sesInputText');
+  if (ta) {
+    ta.placeholder = (fmt === 'oid_mfl')
+      ? 'Paste Override ID [TAB] MFL ID (one per line)\nExample:\n4627\tux5wfo6mf6m01ecfwgf9t4hjg\n4628\t701m70oj5v8q1jf69jyqwegyt\n4629\tw4z3iz0kxqws1tirbwnh1xcf9'
+      : 'Paste OAID (one per line)\nExample:\n140y5f6blfc1u1spwd8yj2u43i\n13atzjx4qj1q31ta7ws4kazc73\nzq83uk4zs23n16jk9ynuwrti4';
+  }
+}
+
+function renderSesPovInterface() {
+  var container = document.getElementById('mainContent');
+
+  var sesColItems = ALL_AVAILABLE_COLUMNS.map(function(col) {
+    var isChecked = sesSelectedColumns.indexOf(col.id) !== -1;
+    return '<label class="col-checkbox-item">' +
+      '<input type="checkbox" value="' + col.id + '" ' + (isChecked ? 'checked' : '') + ' onchange="onSesColToggle(\'' + col.id + '\', this.checked)"/>' +
+      '<span>' + col.label + '</span>' +
+      '</label>';
+  }).join('');
+
+  var placeholderText = (sesInputFormat === 'oid_mfl')
+    ? 'Paste Override ID [TAB] MFL ID (one per line)\nExample:\n4627\tux5wfo6mf6m01ecfwgf9t4hjg\n4628\t701m70oj5v8q1jf69jyqwegyt\n4629\tw4z3iz0kxqws1tirbwnh1xcf9'
+    : 'Paste OAID (one per line)\nExample:\n140y5f6blfc1u1spwd8yj2u43i\n13atzjx4qj1q31ta7ws4kazc73\nzq83uk4zs23n16jk9ynuwrti4';
+
+  var hasData = sesResultsData && sesResultsData.length > 0;
+
+  var html =
+    '<div class="ses-panel">' +
+      '<div class="ses-top-bar">' +
+        '<div class="ses-top-left">' +
+          '<div class="col-selector-container ses-col-container">' +
+            '<button class="col-selector-btn" id="sesColToggleBtn" onclick="toggleSesColumnMenu(event)">' +
+              '⚙️ Select Columns (<span id="sesSelectedColCount">' + sesSelectedColumns.length + '</span>) ▾' +
+            '</button>' +
+            '<div class="col-dropdown-menu" id="sesColDropdownMenu">' +
+              '<div class="col-dropdown-header">' +
+                '<span>Display Columns</span>' +
+                '<label style="cursor:pointer;display:flex;align-items:center;gap:4px">' +
+                  '<input type="checkbox" id="sesSelectAllCols" onchange="toggleSelectAllSesColumns(this.checked)" ' +
+                    (sesSelectedColumns.length === ALL_AVAILABLE_COLUMNS.length ? 'checked' : '') + '/>' +
+                  '<span>Select All</span>' +
+                '</label>' +
+              '</div>' +
+              '<div id="sesColCheckboxesList">' + sesColItems + '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="ses-top-right">' +
+          '<div class="ses-type-toggle">' +
+            '<span style="font-size:12px;font-weight:700;color:#f8ff00;margin-right:4px">Input Format:</span>' +
+            '<label class="ses-radio-label">' +
+              '<input type="radio" name="sesFmt" value="oid_mfl" ' + (sesInputFormat==='oid_mfl'?'checked':'') + ' onchange="setSesInputFormat(\'oid_mfl\')"/>' +
+              '<span>Override ID + MFL ID</span>' +
+            '</label>' +
+            '<label class="ses-radio-label">' +
+              '<input type="radio" name="sesFmt" value="oaid" ' + (sesInputFormat==='oaid'?'checked':'') + ' onchange="setSesInputFormat(\'oaid\')"/>' +
+              '<span>OAID</span>' +
+            '</label>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<textarea id="sesInputText" class="ses-textarea" placeholder="' + placeholderText + '">' + sesCachedInputText + '</textarea>' +
+      '<div class="ses-controls">' +
+        '<button class="btn btn-primary" id="sesFetchBtn" onclick="fetchSesPovData()">&#x21BA; Fetch Data</button>' +
+        '<button class="btn btn-secondary" id="sesCopyTableBtn" onclick="copySesTable()" ' + (!hasData ? 'disabled' : '') + '>📋 Copy Table</button>' +
+        '<button class="btn btn-secondary" id="sesExportCsvBtn" onclick="exportSesCSV()" ' + (!hasData ? 'disabled' : '') + '>&#x2193; Export CSV</button>' +
+      '</div>' +
+    '</div>' +
+    '<div id="sesResultsContainer"></div>';
+
+  container.innerHTML = html;
+
+  if (hasData) {
+    renderSesPovResults();
+  }
+}
+
+function toggleSesColumnMenu(e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  var menu = document.getElementById('sesColDropdownMenu');
+  if (menu) menu.classList.toggle('show');
+}
+
+function toggleSelectAllSesColumns(isChecked) {
+  if (isChecked) {
+    sesSelectedColumns = ALL_AVAILABLE_COLUMNS.map(function(c) { return c.id; });
+  } else {
+    sesSelectedColumns = [];
+  }
+  var chks = document.querySelectorAll('#sesColCheckboxesList input[type=checkbox]');
+  chks.forEach(function(c) { c.checked = isChecked; });
+  var cnt = document.getElementById('sesSelectedColCount');
+  if (cnt) cnt.textContent = sesSelectedColumns.length;
+  renderSesPovResults();
+}
+
+function onSesColToggle(colId, isChecked) {
+  if (isChecked) {
+    if (sesSelectedColumns.indexOf(colId) === -1) sesSelectedColumns.push(colId);
+  } else {
+    sesSelectedColumns = sesSelectedColumns.filter(function(id) { return id !== colId; });
+  }
+  var cnt = document.getElementById('sesSelectedColCount');
+  if (cnt) cnt.textContent = sesSelectedColumns.length;
+  var allChk = document.getElementById('sesSelectAllCols');
+  if (allChk) allChk.checked = (sesSelectedColumns.length === ALL_AVAILABLE_COLUMNS.length);
+  renderSesPovResults();
+}
+
+/* ═══════════════════════════════════════════════
+   FETCH SES - POV DATA (Searches Across ALL Regions)
+═══════════════════════════════════════════════ */
+async function fetchSesPovData() {
+  var ta = document.getElementById('sesInputText');
+  var rawText = (ta ? ta.value : '').trim();
+  sesCachedInputText = rawText;
+
+  if (!rawText) {
+    setStatus('error', 'Please paste input data into the text box first.');
+    return;
+  }
+
+  var lines = rawText.split('\n').map(function(l){ return l.trim(); }).filter(Boolean);
+  if (!lines.length) {
+    setStatus('error', 'No valid input lines found.');
+    return;
+  }
+
+  var btn = document.getElementById('sesFetchBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Fetching Across All Regions...'; }
+  setStatus('loading', 'Fetching streams across all regions for SES - POV...');
+
+  try {
+    var ctrl = new AbortController();
+    var t = setTimeout(function() { ctrl.abort(); }, 60000);
+    var res = await fetch(API_ALL, { method: 'GET', headers: { 'Accept': 'application/json' }, signal: ctrl.signal });
+    clearTimeout(t);
+    if (!res.ok) {
+      var errTxt = await res.text();
+      throw new Error('HTTP ' + res.status + (errTxt ? ': ' + errTxt : ''));
+    }
+    var raw = await res.json();
+    allRegionsData = {};
+    allData = [];
+    COUNTRIES.forEach(function(c) {
+      var regionRaw = raw[c] && raw[c].data ? raw[c].data : [];
+      var streams   = parseStreams(regionRaw);
+      allRegionsData[c] = streams;
+      streams.forEach(function(s) { s._country = c; allData.push(s); });
+    });
+
+    var matchedResults = [];
+
+    lines.forEach(function(line) {
+      if (sesInputFormat === 'oid_mfl') {
+        var parts = line.split(/[\t]+/).map(function(p){ return p.trim(); });
+        if (parts.length < 2) {
+          parts = line.trim().split(/\s+/);
+        }
+        var targetOid = (parts[0] || '').trim().toLowerCase();
+        var targetMfl = (parts[1] || '').trim().toLowerCase();
+
+        var hits = allData.filter(function(s) {
+          var oids = safeStr(s.overrideId).toLowerCase().split(',').map(function(x){ return x.trim(); });
+          var matchOid = oids.indexOf(targetOid) !== -1;
+
+          var matchMfl = true;
+          if (targetMfl) {
+            var mflVal = safeStr(s.mflId).toLowerCase();
+            matchMfl = (mflVal === targetMfl || mflVal.indexOf(targetMfl) !== -1);
+            if (!matchMfl && s._raw) {
+              var rawLinksStr = JSON.stringify(s._raw.links || s._raw.lnk || '').toLowerCase();
+              if (rawLinksStr.indexOf(targetMfl) !== -1) {
+                matchMfl = true;
+              }
+            }
+          }
+
+          return matchOid && matchMfl;
+        });
+
+        if (hits.length > 0) {
+          hits.forEach(function(h) { matchedResults.push(h); });
+        } else {
+          matchedResults.push({
+            overrideId      : parts[0] || '—',
+            mflId           : parts[1] || '—',
+            description     : 'Record not found in live feed',
+            streamStartTime : null,
+            _notFound       : true
+          });
+        }
+      } else {
+        var targetOaid = line.trim().toLowerCase();
+        var hits = allData.filter(function(s) {
+          return safeStr(s.oaId).toLowerCase() === targetOaid ||
+                 safeStr(s.streamId).toLowerCase() === targetOaid ||
+                 (s._raw && safeStr(s._raw.id).toLowerCase() === targetOaid);
+        });
+
+        if (hits.length > 0) {
+          hits.forEach(function(h) { matchedResults.push(h); });
+        } else {
+          matchedResults.push({
+            oaId            : line.trim(),
+            description     : 'Record not found in live feed',
+            streamStartTime : null,
+            _notFound       : true
+          });
+        }
+      }
+    });
+
+    sesResultsData = matchedResults;
+    renderSesPovResults();
+
+    var copyBtn  = document.getElementById('sesCopyTableBtn');
+    var expBtn   = document.getElementById('sesExportCsvBtn');
+    if (copyBtn)  copyBtn.disabled  = false;
+    if (expBtn)   expBtn.disabled   = false;
+
+    setStatus('success', 'SES - POV: Loaded and displayed ' + sesResultsData.length + ' records across all regions.');
+  } catch(e) {
+    showError(e);
+    setStatus('error', 'SES - POV Error: ' + e.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = '&#x21BA; Fetch Data'; }
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   SES - POV COLUMN SORTING (Independent)
+═══════════════════════════════════════════════ */
+function sesSortBy(col) {
+  if (!sesResultsData || !sesResultsData.length) return;
+
+  var scrolls = [];
+  var scrollContainers = document.querySelectorAll('.table-scroll');
+  scrollContainers.forEach(function(el) {
+    scrolls.push(el.scrollLeft);
+  });
+
+  if (sesSortCol === col) {
+    sesSortDir = sesSortDir === 'asc' ? 'desc' : 'asc';
+  } else {
+    sesSortCol = col;
+    sesSortDir = 'asc';
+  }
+
+  sesResultsData.sort(function(a, b) {
+    var va = safeStr(a[col] !== undefined && a[col] !== null ? a[col] : '');
+    var vb = safeStr(b[col] !== undefined && b[col] !== null ? b[col] : '');
+    if (va < vb) return sesSortDir === 'asc' ? -1 : 1;
+    if (va > vb) return sesSortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  renderSesPovResults();
+
+  var newScrollContainers = document.querySelectorAll('.table-scroll');
+  newScrollContainers.forEach(function(el, i) {
+    if (scrolls[i] !== undefined) {
+      el.scrollLeft = scrolls[i];
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   COPY SINGLE COLUMN IN SES - POV
+═══════════════════════════════════════════════ */
+function copySesColumnData(e, colId) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  if (!sesResultsData || !sesResultsData.length) {
+    setStatus('error', 'No rows available to copy in this column.');
+    return;
+  }
+
+  var values = sesResultsData.map(function(s) {
+    if (colId === 'streamStartTime' || colId === 'streamEndTime' || colId === 'lastModTime') {
+      var ts = s[colId];
+      if (!ts || ts === '—') return '—';
+      return fmtDate(ts) + ' ' + fmtTime(ts);
+    }
+    return safeStr(s[colId]);
+  });
+
+  var textToCopy = values.join('\n');
+
+  navigator.clipboard.writeText(textToCopy).then(function() {
+    var colObj = ALL_AVAILABLE_COLUMNS.find(function(c) { return c.id === colId; });
+    var colName = colObj ? colObj.label : colId;
+    setStatus('success', '📋 Copied ' + values.length + ' rows of "' + colName + '" to clipboard!');
+  }).catch(function(err) {
+    setStatus('error', 'Failed to copy column data: ' + err.message);
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   BUILD TH CELL FOR SES - POV (With Resizer & Copy & Sorting)
+═══════════════════════════════════════════════ */
+function sesThCell(colId, label) {
+  var active = sesSortCol === colId;
+  var icon   = active ? (sesSortDir === 'asc' ? ' ▲' : ' ▼') : ' ⇅';
+  var style  = active ? 'color:#fff;' : '';
+
+  var width = columnWidths[colId];
+  if (!width) {
+    var defaultObj = ALL_AVAILABLE_COLUMNS.find(function(c) { return c.id === colId; });
+    width = defaultObj ? defaultObj.defaultWidth : '140px';
+  }
+  var widthStyle = 'width:' + width + ';min-width:' + width + ';';
+
+  return '<th id="th-' + colId + '" style="' + style + widthStyle + '">' +
+    '<div class="th-content">' +
+      '<span class="th-label-group" onclick="sesSortBy(\'' + colId + '\')">' +
+        label + '<span style="opacity:' + (active ? 1 : 0.4) + ';font-size:10px">' + icon + '</span>' +
+      '</span>' +
+      '<button class="btn-copy-col" title="Copy visible rows of ' + label + '" onclick="copySesColumnData(event, \'' + colId + '\')">📋</button>' +
+    '</div>' +
+    '<div class="col-resizer" onmousedown="initResize(event, \'' + colId + '\')"></div>' +
+    '</th>';
+}
+
+/* ═══════════════════════════════════════════════
+   RENDER SES - POV RESULTS
+═══════════════════════════════════════════════ */
+function renderSesPovResults() {
+  var container = document.getElementById('sesResultsContainer');
+  if (!container) return;
+
+  if (!sesResultsData || !sesResultsData.length) {
+    container.innerHTML = '';
+    return;
+  }
+
+  var theadCells = '';
+  sesSelectedColumns.forEach(function(colId) {
+    var colObj = ALL_AVAILABLE_COLUMNS.find(function(c) { return c.id === colId; });
+    if (colObj) {
+      theadCells += sesThCell(colObj.id, colObj.label);
+    }
+  });
+
+  var rowsHtml = '';
+  sesResultsData.forEach(function(s, idx) {
+    var sst  = s.streamStartTime;
+    var set_ = s.streamEndTime;
+    var sid  = safeStr(s.streamId);
+    var cid  = safeStr(s.competitionId);
+    var rid  = safeStr(s.rightsId);
+    var lmt  = s.lastModTime || null;
+    var desc = safeStr(s.description);
+    var oid  = safeStr(s.overrideId);
+    var oaid = safeStr(s.oaId);
+    var rsid = safeStr(s.rsid);
+    var chNum= safeStr(s.channelNum);
+    var mgfx = safeStr(s.motionGraphics);
+    var mflId= safeStr(s.mflId);
+    var cc   = safeStr(s.closedCaptions);
+    var ccc  = safeStr(s.ccConfig);
+    var al   = safeStr(s.audioLangs);
+    var ac   = safeStr(s.audioConfig);
+    var hetn = safeStr(s.heEventTypeName);
+    var wmk  = safeStr(s.watermarking);
+    var dc   = safeStr(s.dolbyConfig);
+    var heR  = safeStr(s.heResilience);
+    var mta  = safeStr(s.mta);
+    var tier = safeStr(s.prodTier);
+    var drm  = s.drmRequired;
+
+    var dcHtml = (dc !== '—') ? '<div class="dolby-cell" title="' + dc + '">' + dc + '</div>' : '<span style="color:#555">—</span>';
+    var acHtml = (ac !== '—') ? '<div class="audio-cell" title="' + ac + '">' + ac + '</div>' : '<span style="color:#555">—</span>';
+    var ccHtml = (cc !== '—') ? '<span class="badge badge-gray" title="' + cc + '">' + cc + '</span>' : '<span style="color:#555">None</span>';
+    var tierHtml = (tier !== '—') ? '<span class="tier-cell" title="Tier ' + tier + '">' + tier + '</span>' : '<span style="color:#555">—</span>';
+    var drmHtml = s._notFound ? '<span style="color:#555">—</span>' : (drm ? '<span class="badge badge-green">true</span>' : '<span class="badge badge-gray">false</span>');
+    var chHtml  = (chNum !== '—' && chNum !== 'None') ? '<span class="id-full" title="' + chNum + '">' + chNum + '</span>' : '<span style="color:#555">None</span>';
+    var mgfxHtml = (mgfx !== '—') ? '<span class="id-full" title="' + mgfx + '">' + mgfx + '</span>' : '<span style="color:#555">—</span>';
+
+    var cellsMap = {
+      streamStartTime : '<td title="' + fmtDate(sst) + ' ' + fmtTime(sst) + '">' + fmtDateTimeHtml(sst) + '</td>',
+      streamEndTime   : '<td title="' + fmtDate(set_) + ' ' + fmtTime(set_) + '">' + fmtDateTimeHtml(set_) + '</td>',
+      prodTier        : '<td title="' + tier + '">' + tierHtml + '</td>',
+      drmRequired     : '<td title="' + (s._notFound ? '—' : (drm ? 'true' : 'false')) + '">' + drmHtml  + '</td>',
+      streamId        : '<td title="' + sid + '"><span class="stream-id">' + sid + '</span></td>',
+      competitionId   : '<td title="' + cid + '"><span class="id-full">' + cid + '</span></td>',
+      rightsId        : '<td title="' + rid + '"><span class="id-full">' + rid + '</span></td>',
+      lastModTime     : '<td title="' + fmtDate(lmt) + ' ' + fmtTime(lmt) + '">' + fmtDateTimeHtml(lmt) + '</td>',
+      description     : '<td title="' + desc + '"><div class="cell-desc">' + desc + '</div></td>',
+      overrideId      : '<td title="' + oid + '"><span class="override-cell">' + oid + '</span></td>',
+      oaId            : '<td title="' + oaid + '"><span class="id-full">' + oaid + '</span></td>',
+      rsid            : '<td title="' + rsid + '"><span class="id-full">' + rsid + '</span></td>',
+      channelNum      : '<td title="' + chNum + '">' + chHtml + '</td>',
+      motionGraphics  : '<td title="' + mgfx + '">' + mgfxHtml + '</td>',
+      mflId           : '<td title="' + mflId + '"><span class="id-full">' + mflId + '</span></td>',
+      closedCaptions  : '<td title="' + cc + '">' + ccHtml + '</td>',
+      ccConfig        : '<td title="' + ccc + '"><span class="id-full">' + ccc + '</span></td>',
+      audioLangs      : '<td title="' + al + '"><span class="id-full">' + al + '</span></td>',
+      audioConfig     : '<td title="' + ac + '">' + acHtml + '</td>',
+      heEventTypeName : '<td title="' + hetn + '"><span class="badge badge-purple">' + hetn + '</span></td>',
+      watermarking    : '<td title="' + wmk + '"><span class="badge badge-blue">' + wmk + '</span></td>',
+      dolbyConfig     : '<td title="' + dc + '">' + dcHtml + '</td>',
+      heResilience    : '<td title="' + heR + '"><span class="badge badge-green">' + heR + '</span></td>',
+      mta             : '<td title="' + mta + '"><div class="mta-cell">' + mta + '</div></td>'
+    };
+
+    var rowContent = '';
+    sesSelectedColumns.forEach(function(colId) {
+      rowContent += cellsMap[colId] || '<td>—</td>';
+    });
+
+    var rowStyle = s._notFound ? 'style="background:#220a0a"' : '';
+    rowsHtml += '<tr ' + rowStyle + '><td class="row-number">' + (idx+1) + '</td>' + rowContent + '</tr>';
+  });
+
+  container.innerHTML =
+    '<div class="table-wrapper">' +
+      '<div class="table-header-bar">' +
+        '<h3>📡 SES - POV Results</h3>' +
+        '<span>Showing <strong style="color:#f8ff00">' + sesResultsData.length + '</strong> matching records</span>' +
+      '</div>' +
+      '<div class="table-scroll"><table>' +
+        '<thead><tr><th style="width:40px">#</th>' + theadCells + '</tr></thead>' +
+        '<tbody>' + rowsHtml + '</tbody>' +
+      '</table></div>' +
+    '</div>';
+}
+
+function copySesTable() {
+  if (!sesResultsData || !sesResultsData.length) return;
+
+  var headers = ['#'].concat(
+    sesSelectedColumns.map(function(cId) {
+      var col = ALL_AVAILABLE_COLUMNS.find(function(c){ return c.id === cId; });
+      return col ? col.label : cId;
+    })
+  );
+
+  var lines = [headers.join('\t')];
+
+  sesResultsData.forEach(function(s, idx) {
+    var row = [idx + 1];
+    sesSelectedColumns.forEach(function(colId) {
+      if (colId === 'streamStartTime' || colId === 'streamEndTime' || colId === 'lastModTime') {
+        var ts = s[colId];
+        row.push(ts && ts !== '—' ? (fmtDate(ts) + ' ' + fmtTime(ts)) : '—');
+      } else {
+        row.push(safeStr(s[colId]));
+      }
+    });
+    lines.push(row.join('\t'));
+  });
+
+  navigator.clipboard.writeText(lines.join('\n')).then(function() {
+    setStatus('success', '📋 Copied complete SES - POV table to clipboard (Excel ready)!');
+  }).catch(function(err) {
+    setStatus('error', 'Failed to copy table: ' + err.message);
+  });
+}
+
+function exportSesCSV() {
+  if (!sesResultsData || !sesResultsData.length) return;
+
+  var headers = sesSelectedColumns.map(function(cId) {
+    var col = ALL_AVAILABLE_COLUMNS.find(function(c){ return c.id === cId; });
+    return col ? col.label : cId;
+  });
+
+  var rows = [headers.join(',')];
+
+  sesResultsData.forEach(function(s) {
+    var row = [];
+    sesSelectedColumns.forEach(function(colId) {
+      if (colId === 'streamStartTime' || colId === 'streamEndTime' || colId === 'lastModTime') {
+        var ts = s[colId];
+        row.push(ts && ts !== '—' ? (fmtDate(ts) + ' ' + fmtTime(ts)) : '—');
+      } else {
+        row.push(safeStr(s[colId]));
+      }
+    });
+    rows.push(row.map(function(v) { return '"' + v.replace(/"/g, '""') + '"'; }).join(','));
+  });
+
+  var blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'SES_POV_Results_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  setStatus('success', '📥 Exported ' + sesResultsData.length + ' SES - POV rows to CSV.');
+}
+
+/* ═══════════════════════════════════════════════
+   ORIGINAL DATA FETCHING (Single & All Regions)
 ═══════════════════════════════════════════════ */
 async function fetchData() {
   if (!selectedCountry) { setStatus('error','Please select a region first.'); return; }
@@ -961,7 +1519,10 @@ async function fetchAllRegions() {
     var res  = await fetch(API_ALL,
       { method:'GET', headers:{'Accept':'application/json'}, signal:ctrl.signal });
     clearTimeout(t);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
+    if (!res.ok) {
+      var errTxt = await res.text();
+      throw new Error('HTTP ' + res.status + (errTxt ? ': ' + errTxt : ''));
+    }
     var raw = await res.json();
     allRegionsData = {}; allData = [];
     COUNTRIES.forEach(function(c) {
@@ -1018,6 +1579,7 @@ function parseStreams(raw) {
 
 /* ═══════════════════════════════════════════════
    NORMALISE — Regional Live Stream API
+   (Deduplicated Channel Num & Direct Motion Graphics)
 ═══════════════════════════════════════════════ */
 function normalise(s) {
   if (!s || typeof s !== 'object') return {};
@@ -1029,7 +1591,7 @@ function normalise(s) {
     oid = rawOid.map(function(o) { return (o && o.id) ? o.id : safeStr(o); }).join(', ');
   } else if (rawOid) { oid = safeStr(rawOid); }
 
-  /* AudioConfig: dynamic code | pid : 258 */
+  /* AudioConfig */
   var ac = '—';
   var rawAc = s.audioConfig || s.ac;
   if (Array.isArray(rawAc) && rawAc.length > 0) {
@@ -1047,7 +1609,7 @@ function normalise(s) {
     if (validConfigs.length > 0) ac = validConfigs.join(' | ');
   } else if (rawAc && rawAc !== '') { ac = safeStr(rawAc); }
 
-  /* AudioLangs: dynamic de-de | en-gb */
+  /* AudioLangs */
   var al = '—';
   var rawAl = s.audioLangs || s.al;
   if (Array.isArray(rawAl) && rawAl.length > 0) {
@@ -1055,7 +1617,7 @@ function normalise(s) {
     if (validLangs.length > 0) al = validLangs.map(function(x){ return safeStr(x).trim(); }).join(' | ');
   } else if (rawAl && rawAl !== '') { al = safeStr(rawAl); }
 
-  /* Closed Captions: closedCaptioning / cc */
+  /* Closed Captions */
   var cc = 'None';
   var rawCc = s.closedCaptioning !== undefined ? s.closedCaptioning : s.cc;
   if (Array.isArray(rawCc)) {
@@ -1069,7 +1631,7 @@ function normalise(s) {
     cc = safeStr(rawCc);
   }
 
-  /* cc Config: ccConfig / ccc -> code | standard */
+  /* cc Config */
   var cccStr = 'none';
   var rawCcc = s.ccConfig !== undefined ? s.ccConfig : s.ccc;
   if (Array.isArray(rawCcc) && rawCcc.length > 0) {
@@ -1089,34 +1651,63 @@ function normalise(s) {
     cccStr = safeStr(rawCcc);
   }
 
-  /* rsid: regionalSupplierId / rsid */
+  /* rsid */
   var rsidStr = safeStr(s.regionalSupplierId !== undefined ? s.regionalSupplierId : s.rsid);
 
-  /* Channel Num: from distributionAddresses / dstAddr */
+  /* Channel Num: Deduplicated from distributionAddresses / dstAddr */
   var chNumStr = 'None';
-  var rawDstAddr = s.distributionAddresses !== undefined ? s.distributionAddresses : s.dstAddr;
+  var rawDstAddr = s.distributionAddresses !== undefined ? s.distributionAddresses : (s.distAddresses !== undefined ? s.distAddresses : s.dstAddr);
   if (Array.isArray(rawDstAddr) && rawDstAddr.length > 0) {
     var chNums = [];
     rawDstAddr.forEach(function(d) {
       if (d && d.channelNum !== undefined && d.channelNum !== null && String(d.channelNum).trim() !== '') {
-        chNums.push(String(d.channelNum).trim());
+        var val = String(d.channelNum).trim();
+        if (chNums.indexOf(val) === -1) {
+          chNums.push(val);
+        }
       }
     });
     if (chNums.length > 0) chNumStr = chNums.join(', ');
+  } else if (s.channelNum !== undefined && s.channelNum !== null && String(s.channelNum).trim() !== '') {
+    chNumStr = String(s.channelNum).trim();
   }
 
-  /* Motion Graphics: motionGraphics / mgfx */
+  /* Motion Graphics: directly from API */
   var mgfxStr = safeStr(s.motionGraphics !== undefined ? s.motionGraphics : s.mgfx);
 
-  /* MFL ID: links section with id */
+  /* MFL ID */
   var mflId = '—';
-  if (Array.isArray(s.links)) {
-    for (var li = 0; li < s.links.length; li++) {
-      var link = s.links[li];
-      if (link && link.id && String(link.id).trim() !== '') {
-        mflId = String(link.id).trim();
-        break;
+  function findLinkId(item) {
+    if (!item) return null;
+    if (typeof item === 'string' && item.trim() !== '') return item.trim();
+    if (item.id && String(item.id).trim() !== '') return String(item.id).trim();
+    if (item['@id'] && String(item['@id']).trim() !== '') return String(item['@id']).trim();
+    return null;
+  }
+  if (s.mflId && String(s.mflId).trim() !== '') {
+    mflId = String(s.mflId).trim();
+  } else if (s['lnk.urn:perform:mfl:fixture']) {
+    var fid = findLinkId(s['lnk.urn:perform:mfl:fixture']);
+    if (fid) mflId = fid;
+  } else if (s.lnk) {
+    if (Array.isArray(s.lnk)) {
+      for (var li = 0; li < s.lnk.length; li++) {
+        var fid = findLinkId(s.lnk[li]);
+        if (fid) { mflId = fid; break; }
       }
+    } else if (typeof s.lnk === 'object') {
+      var fid = findLinkId(s.lnk['urn:perform:mfl:fixture'] || s.lnk.fixture || s.lnk);
+      if (fid) mflId = fid;
+    }
+  } else if (s.links) {
+    if (Array.isArray(s.links)) {
+      for (var li = 0; li < s.links.length; li++) {
+        var fid = findLinkId(s.links[li]);
+        if (fid) { mflId = fid; break; }
+      }
+    } else if (typeof s.links === 'object') {
+      var fid = findLinkId(s.links['urn:perform:mfl:fixture'] || s.links.fixture || s.links);
+      if (fid) mflId = fid;
     }
   }
 
@@ -1157,10 +1748,10 @@ function normalise(s) {
   var rawHeR = s.heResilience || s.heR;
   if (rawHeR !== undefined && rawHeR !== null) { heR = safeStr(rawHeR); }
 
-  /* Tier: prodTier / ptr */
+  /* Tier */
   var pTier = safeStr(s.prodTier !== undefined ? s.prodTier : (s.ptr !== undefined ? s.ptr : '—'));
 
-  /* DRM: drmRequired / drm */
+  /* DRM */
   var isDrm = (s.drmRequired !== undefined ? s.drmRequired : (s.drm !== undefined ? s.drm : false));
 
   var sstRaw = s.streamStartTime || s.sst || s.streamStart || null;
@@ -1228,7 +1819,6 @@ function normaliseMkEae(ev) {
 
   var cv = ev.configValues || (ev._raw && ev._raw.configValues) || {};
 
-  /* Dolby enabled flag in EAE */
   var dEnabled = false;
   if (ev.dolbyEnabled !== undefined) {
     dEnabled = (ev.dolbyEnabled === true || ev.dolbyEnabled === 'true');
@@ -1266,8 +1856,6 @@ function normaliseMkEae(ev) {
 
 /* ═══════════════════════════════════════════════
    MK-EAE COMPARISON ENGINE
-   Primary Matching Keys: ★ Stream Start, ★ Description, ★ Override ID
-   MTA removed completely from EAE comparison
 ═══════════════════════════════════════════════ */
 var COMPARE_FIELDS = [
   { key: 'streamStartTime',  label: 'Stream Start'  },
@@ -1356,7 +1944,6 @@ function compareField(fieldKey, arVal, mkVal, arRecord, mkRecord) {
   }
 }
 
-/* Include Override IDs starting with 1, 2, 4, and 5 */
 function isEligibleOverrideId(oid) {
   if (!oid || oid === '—') return false;
   return oid.split(',').map(function(x){return x.trim();})
@@ -1833,6 +2420,7 @@ function renderValidation() {
     '<input type="text" class="val-search-box" id="valSearchInput"' +
     ' placeholder="Search Override ID, OA ID, RSID, Channel Num, Desc..."' +
     ' value="' + valSearchQuery + '"' +
+    ' autocomplete="off"' +
     ' oninput="valSearch()"/>' +
     '<button class="val-search-clear" id="valSearchClearBtn" onclick="clearValSearch()" style="display:' + (valSearchQuery ? 'inline-block' : 'none') + '">✕ Clear</button>' +
     '<span id="valSearchCountBadge" style="font-size:11px;color:#888">' + (valSearchQuery ? 'Showing ' + displayed.length + ' results' : '') + '</span>' +
@@ -1912,7 +2500,7 @@ function trunc(s, n) {
 }
 
 /* ═══════════════════════════════════════════════
-   DATE & TIME FORMATTERS (Readable Date + UTC Time)
+   DATE & TIME FORMATTERS
 ═══════════════════════════════════════════════ */
 function fmtDate(ts) {
   if (!ts) return '—';
@@ -1988,7 +2576,7 @@ function getCurrentFilteredDataset() {
 }
 
 /* ═══════════════════════════════════════════════
-   COPY COLUMN VALUES (Filtered Data Only)
+   COPY COLUMN VALUES (Live API / Dashboard)
 ═══════════════════════════════════════════════ */
 function copyColumnData(e, colId) {
   e.preventDefault();
@@ -2021,7 +2609,7 @@ function copyColumnData(e, colId) {
 }
 
 /* ═══════════════════════════════════════════════
-   BUILD TH CELL WITH RESIZE DRAGGER & COPY ICON
+   BUILD TH CELL (Live API Dashboard)
 ═══════════════════════════════════════════════ */
 function thCell(col, label) {
   if (selectedColumns.indexOf(col) === -1) return '';
@@ -2060,8 +2648,8 @@ function initResize(e, colId) {
   e.stopPropagation();
   resizingCol = colId;
   startX = e.pageX;
-  var th = document.getElementById('th-' + colId);
-  startWidth = th.offsetWidth;
+  var th = e.target.closest('th') || document.getElementById('th-' + colId);
+  startWidth = th ? th.offsetWidth : 140;
 
   document.addEventListener('mousemove', handleMouseMove);
   document.addEventListener('mouseup', handleMouseUp);
@@ -2073,7 +2661,7 @@ function handleMouseMove(e) {
   var newWidth = Math.max(50, startWidth + diff);
   columnWidths[resizingCol] = newWidth + 'px';
 
-  var ths = document.querySelectorAll('#th-' + resizingCol);
+  var ths = document.querySelectorAll('th[id="th-' + resizingCol + '"]');
   ths.forEach(function(th) {
     th.style.width = newWidth + 'px';
     th.style.minWidth = newWidth + 'px';
@@ -2087,8 +2675,7 @@ function handleMouseUp() {
 }
 
 /* ═══════════════════════════════════════════════
-   BUILD TABLE ROWS WITH COLUMN SELECTION & HOVER
-   (Preserves selection order)
+   BUILD TABLE ROWS (Single & All Regions)
 ═══════════════════════════════════════════════ */
 function buildRows(pageData, startIndex, showCountry) {
   var rows = '';
@@ -2198,8 +2785,7 @@ function buildRows(pageData, startIndex, showCountry) {
 }
 
 /* ═══════════════════════════════════════════════
-   BUILD THEAD
-   (Preserves chronological selection order)
+   BUILD THEAD (Live API Dashboard)
 ═══════════════════════════════════════════════ */
 function buildThead(showCountry) {
   var countryTh = showCountry ? '<th style="cursor:default;width:90px">Region</th>' : '';
@@ -2267,7 +2853,6 @@ function renderTable() {
 
 /* ═══════════════════════════════════════════════
    RENDER ALL REGIONS
-   (Matching regions FIRST, empty at bottom)
 ═══════════════════════════════════════════════ */
 function renderAllRegions() {
   var container  = document.getElementById('mainContent');
@@ -2332,7 +2917,7 @@ function renderAllRegions() {
   var summary =
     '<div style="background:#1a1a00;border:1px solid #f8ff00;border-radius:10px;' +
     'padding:12px 20px;margin-bottom:20px;display:flex;align-items:center;' +
-    'justify-content:space-between;flex-wrap:wrap;gap:10px">' +
+    'justify-content:space-between;flex-wrap:gap:10px">' +
     '<span style="color:#f8ff00;font-weight:700;font-size:14px">🌐 All Regions Summary</span>' +
     '<span style="color:#aaa;font-size:13px">' +
     COUNTRIES.length + ' regions &nbsp;|&nbsp; ' +
@@ -2396,7 +2981,7 @@ function goPage(p) {
 }
 
 /* ═══════════════════════════════════════════════
-   SORT (Preserves Horizontal Scroll Position)
+   SORT (Live API Dashboard)
 ═══════════════════════════════════════════════ */
 function sortBy(col) {
   var scrolls = [];
@@ -2444,7 +3029,7 @@ function sortBy(col) {
 }
 
 function filterTable() {
-  if (isValidationMode) return;
+  if (isValidationMode || isSesPovMode) return;
   if (isAllMode) { renderAllRegions(); return; }
   applyAllFilters();
   renderTable();
@@ -2478,7 +3063,7 @@ function updateRefreshInterval() {
 }
 
 /* ═══════════════════════════════════════════════
-   EXPORT CSV (Filtered & Displayed Data ONLY)
+   EXPORT CSV (Single & All Regions)
 ═══════════════════════════════════════════════ */
 function exportCSV() {
   var dataToExport = getCurrentFilteredDataset();
