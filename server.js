@@ -18,7 +18,8 @@ const COUNTRY_OUTLETS = {
   'Belgium'  : '1s01myh4xwvs91gp8tqvwllj76',
   'France'   : '1h9emivijm87d13yxr38arhw4f',
   'Portugal' : 'c9qhvff9uz21skuh4zctiz1n',
-  'Taiwan'   : '1ovfmjfvdq1321dpuxti2x2c8q'
+  'Taiwan'   : '1ovfmjfvdq1321dpuxti2x2c8q',
+  'MENA'     : 'yoiaw6eoma751d1ztrojskjt2'
 };
 
 const API_FIELDS = '?_fmt=json&_rt=b&_fld=oaId,cmId,dc,ccc,mta,ptr,ac,heETN,heR,drm,rsid,cc,rid,desc,oid,dstAddr,mgfx,al,sst,set,wmk,lnk.urn:perform:mfl:fixture,lmt&_als=l&_ord=sst&_ordSrt=asc&_pgSz=1000';
@@ -174,7 +175,7 @@ http.createServer(function(req, res) {
         'Content-Type'                : 'application/json',
         'Access-Control-Allow-Origin' : '*'
       });
-      res.end(JSON.stringify(result.data));
+      res.end(JSON.stringify(result.data || { error: result.error }));
     });
     return;
   }
