@@ -22,8 +22,7 @@ const COUNTRY_OUTLETS = {
   'MENA'     : 'yoiaw6eoma751d1ztrojskjt2'
 };
 
-const API_FIELDS = '?_fmt=json&_rt=b&_fld=oaId,cmId,dc,ccc,mta,ptr,ac,heETN,heR,drm,rsid,cc,rid,desc,oid,dstAddr,mgfx,al,sst,set,wmk,lnk.urn:perform:mfl:fixture,lmt&_als=l&_ord=sst&_ordSrt=asc&_pgSz=1000';
-
+const API_FIELDS = '?_fmt=json&_rt=b&_fld=oaId,cmId,dc,ccc,mta,ptr,ac,heETN,heR,drm,rsid,cc,rid,desc,oid,dstAddr,mgfx,al,sst,set,wmk,lnk.urn:perform:mfl:fixture,lmt&_ord=sst&_ordSrt=asc&_pgSz=1000';
 const MKEAE_DCG = 'https://cluster-1.uksouth-3.streaming.mediakind.com/dazn/events';
 const MKEAE_DCH = 'https://cluster-1.westeurope-3.streaming.mediakind.com/dazn/events';
 
